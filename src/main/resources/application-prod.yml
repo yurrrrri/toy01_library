@@ -1,0 +1,22 @@
+spring:
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  profiles:
+    active: dev
+    include: secret
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
+        use_sql_comments: false
+  logging:
+    level:
+      root: INFO
+      app.syr.lib: INFO
+      org.hibernate.orm.jdbc.bind: INFO
+      org.hibernate.orm.jdbc.extract: INFO
