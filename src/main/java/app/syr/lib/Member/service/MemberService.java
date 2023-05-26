@@ -36,11 +36,20 @@ public class MemberService {
         return member.get();
     }
 
-    public Member modify(Member member, String password, String email) {
+    public Member findByUsername(String username) {
+        Optional<Member> member = memberRepository.findByUsername(username);
+
+        if(member.isEmpty()) return null;
+
+        return member.get();
+    }
+
+    public Member modify(Member member, String password, String email, String phoneNumber) {
         Member modifiedMember = member
                 .toBuilder()
                 .password(passwordEncoder.encode(password))
                 .email(email)
+                .phoneNumber(phoneNumber)
                 .build();
 
         memberRepository.save(modifiedMember);

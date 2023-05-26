@@ -8,14 +8,18 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
@@ -32,7 +36,7 @@ public class Member extends BaseEntity {
 
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "borrow")
+    @OneToMany(mappedBy = "member")
     @Builder.Default
     private List<Borrow> borrowList = new ArrayList<>();
 
@@ -48,5 +52,15 @@ public class Member extends BaseEntity {
     public void setTimeout() {
         LocalDateTime now = LocalDateTime.now();
         timeout = now.plusDays(14L); // 2주 동안 대출 불가
+    }
+
+    public List<? extends GrantedAuthority> getGrantedAuthorities() {
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+
+        grantedAuthorities.add(new SimpleGrantedAuthority("MEMBER"));
+
+        if("ADMIN".equals(username)) grantedAuthorities.add(new SimpleGrantedAuthority("ADMIN"));
+
+        return grantedAuthorities;
     }
 }
