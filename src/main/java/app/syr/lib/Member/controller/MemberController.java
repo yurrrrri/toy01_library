@@ -142,7 +142,7 @@ public class MemberController {
         }
 
         memberService.delete(member);
-        return "/logout";
+        return "/member/logout";
     }
 
 }
