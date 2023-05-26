@@ -1,10 +1,15 @@
 package app.syr.lib.category.entity;
 
 import app.syr.lib.base.entity.BaseEntity;
+import app.syr.lib.book.entity.Book;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -13,4 +18,8 @@ import lombok.experimental.SuperBuilder;
 public class Category extends BaseEntity {
 
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    private List<Book> books = new ArrayList<>();
+
 }

@@ -31,7 +31,7 @@ public class MemberService {
     public Member findById(Long id) {
         Optional<Member> member = memberRepository.findById(id);
 
-        if(member.isEmpty()) return null;
+        if (member.isEmpty()) return null;
 
         return member.get();
     }
@@ -39,7 +39,7 @@ public class MemberService {
     public Member findByUsername(String username) {
         Optional<Member> member = memberRepository.findByUsername(username);
 
-        if(member.isEmpty()) return null;
+        if (member.isEmpty()) return null;
 
         return member.get();
     }

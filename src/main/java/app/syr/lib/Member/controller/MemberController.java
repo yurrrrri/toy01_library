@@ -5,14 +5,11 @@ import app.syr.lib.Member.service.MemberService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,14 +61,14 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/signup")
     public String signup(@Valid MemberCreateForm form, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) return "/member/signup";
+        if (bindingResult.hasErrors()) return "/member/signup";
 
-        if(!form.getPassword1().equals(form.getPassword2())) {
+        if (!form.getPassword1().equals(form.getPassword2())) {
             bindingResult.reject("Password Incorrect", "2개의 비밀번호가 일치하지 않습니다.");
             return "/member/signup";
         }
 
-        if(memberService.findByUsername(form.getUsername()) != null) {
+        if (memberService.findByUsername(form.getUsername()) != null) {
             bindingResult.reject("Existing Username", "이미 존재하는 아이디입니다.");
             return "/member/signup";
         }
@@ -117,7 +114,7 @@ public class MemberController {
     public String modify(@PathVariable Long id) {
         Member member = memberService.findById(id);
 
-        if(member == null) return "redirect:/member/login";
+        if (member == null) return "redirect:/member/login";
 
         return "member/modify";
     }
@@ -127,7 +124,7 @@ public class MemberController {
     public String modify(@PathVariable Long id, MemberModifyForm form, Principal principal) {
         Member member = memberService.findById(id);
 
-        if(!member.getUsername().equals(principal.getName())) {
+        if (!member.getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
         }
 
@@ -140,7 +137,7 @@ public class MemberController {
     public String delete(@PathVariable Long id, Principal principal) {
         Member member = memberService.findById(id);
 
-        if(!member.getUsername().equals(principal.getName())) {
+        if (!member.getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다");
         }
 

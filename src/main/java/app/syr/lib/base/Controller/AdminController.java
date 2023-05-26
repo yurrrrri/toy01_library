@@ -1,4 +1,4 @@
-package app.syr.lib.base;
+package app.syr.lib.base.Controller;
 
 import app.syr.lib.Member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AdminController {
 
     private MemberService memberService;
-
 
 
 }

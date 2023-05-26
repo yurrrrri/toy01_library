@@ -3,7 +3,7 @@ package app.syr.lib.book.entity;
 import app.syr.lib.base.entity.BaseEntity;
 import app.syr.lib.category.entity.Category;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,6 +20,6 @@ public class Book extends BaseEntity {
 
     private boolean isBorrowed;
 
-    @OneToOne
+    @ManyToOne
     private Category category;
 }
