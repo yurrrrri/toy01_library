@@ -31,7 +31,6 @@ public class Member extends BaseEntity {
     private String password;
 
     @Email
-    @Column(unique = true)
     private String email;
 
     private String phoneNumber;

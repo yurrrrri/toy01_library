@@ -2,6 +2,7 @@ package app.syr.lib.Member.controller;
 
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.service.MemberService;
+import app.syr.lib.base.rq.Rq;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,6 +26,7 @@ import java.security.Principal;
 public class MemberController {
 
     private final MemberService memberService;
+    private final Rq rq;
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/signup")
@@ -74,7 +76,7 @@ public class MemberController {
         }
 
         memberService.create(form.getUsername(), form.getPassword1(), form.getEmail(), form.getPhoneNumber());
-        return "redirect:/login";
+        return rq.redirectWithMsg("/member/login", "회원가입이 되었습니다.");
     }
 
     @PreAuthorize("isAnonymous()")
@@ -121,28 +123,29 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String modify(@PathVariable Long id, MemberModifyForm form, Principal principal) {
+    public String modify(@PathVariable Long id, MemberModifyForm form) {
         Member member = memberService.findById(id);
 
-        if (!member.getUsername().equals(principal.getName())) {
+        if (!member.getUsername().equals(rq.getMember().getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
         }
 
         memberService.modify(member, form.getPassword1(), form.getEmail(), form.getPhoneNumber());
-        return "member/mypage";
+        return rq.redirectWithMsg("member/mypage", "회원 정보가 수정되었습니다.");
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, Principal principal) {
+    public String delete(@PathVariable Long id) {
         Member member = memberService.findById(id);
 
-        if (!member.getUsername().equals(principal.getName())) {
+        if (!member.getUsername().equals(rq.getMember().getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다");
         }
 
+        // soft-delete
         memberService.delete(member);
-        return "/member/logout";
+        return rq.redirectWithMsg("member/logout", "탈퇴가 완료되었습니다.");
     }
 
 }

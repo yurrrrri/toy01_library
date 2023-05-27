@@ -31,7 +31,6 @@ public class Rq {
     public Rq(MemberService memberService, MessageSource messageSource, HttpServletRequest req, HttpServletResponse resp) {
         this.memberService = memberService;
         this.messageSource = messageSource;
-        this.locale = locale;
         this.req = req;
         this.resp = resp;
 
