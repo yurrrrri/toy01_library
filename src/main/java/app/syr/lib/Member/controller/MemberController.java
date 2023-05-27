@@ -73,7 +73,7 @@ public class MemberController {
             return "/member/signup";
         }
 
-        memberService.create(form.getUsername(), form.getPassword1(), form.getEmail());
+        memberService.create(form.getUsername(), form.getPassword1(), form.getEmail(), form.getPhoneNumber());
         return "redirect:/login";
     }
 

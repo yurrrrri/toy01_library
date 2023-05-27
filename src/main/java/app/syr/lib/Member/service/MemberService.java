@@ -16,12 +16,13 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Member create(String username, String password, String email) {
+    public Member create(String username, String password, String email, String phoneNumber) {
         Member member = Member
                 .builder()
                 .username(username)
                 .password(passwordEncoder.encode(password))
                 .email(email)
+                .phoneNumber(phoneNumber)
                 .build();
 
         memberRepository.save(member);
