@@ -3,6 +3,7 @@ package app.syr.lib.Member.controller;
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.service.MemberService;
 import app.syr.lib.base.rq.Rq;
+import app.syr.lib.base.rsData.RsData;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,11 +12,9 @@ import lombok.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
@@ -30,12 +29,13 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(Model model) {
+        model.addAttribute("memberCreateForm", new MemberCreateForm());
         return "/member/signup";
     }
 
     @Getter
-    @Builder
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberCreateForm {
@@ -62,21 +62,12 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/signup")
-    public String signup(@Valid MemberCreateForm form, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return "/member/signup";
+    public String signup(@Valid @ModelAttribute("memberCreateForm") MemberCreateForm form) {
+        RsData<Member> rs = memberService.create(form.getUsername(), form.getPassword1(), form.getPassword2(), form.getEmail(), form.getPhoneNumber());
 
-        if (!form.getPassword1().equals(form.getPassword2())) {
-            bindingResult.reject("Password Incorrect", "2개의 비밀번호가 일치하지 않습니다.");
-            return "/member/signup";
-        }
+        if(rs.isFail()) return rq.historyBack("다시 입력해주세요.");
 
-        if (memberService.findByUsername(form.getUsername()) != null) {
-            bindingResult.reject("Existing Username", "이미 존재하는 아이디입니다.");
-            return "/member/signup";
-        }
-
-        memberService.create(form.getUsername(), form.getPassword1(), form.getEmail(), form.getPhoneNumber());
-        return rq.redirectWithMsg("/member/login", "회원가입이 되었습니다.");
+        return rq.redirectWithMsg("/member/login", "회원가입 되었습니다.");
     }
 
     @PreAuthorize("isAnonymous()")
