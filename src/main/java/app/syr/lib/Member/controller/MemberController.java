@@ -4,6 +4,8 @@ import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.service.MemberService;
 import app.syr.lib.base.rq.Rq;
 import app.syr.lib.base.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -22,6 +24,7 @@ import java.security.Principal;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/member")
+@Tag(name = "MemberController", description = "로그인, 회원가입 등")
 public class MemberController {
 
     private final MemberService memberService;
@@ -62,6 +65,7 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @PostMapping("/signup")
+    @Operation(summary = "회원가입")
     public String signup(@Valid @ModelAttribute("memberCreateForm") MemberCreateForm form) {
         RsData<Member> rs = memberService.create(form.getUsername(), form.getPassword1(), form.getPassword2(), form.getEmail(), form.getPhoneNumber());
 
@@ -78,6 +82,7 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
+    @Operation(summary = "마이페이지")
     public String showMypage() {
         return "/member/mypage";
     }
@@ -114,6 +119,7 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
+    @Operation(summary = "회원 정보 수정")
     public String modify(@PathVariable Long id, MemberModifyForm form) {
         Member member = memberService.findById(id);
 
@@ -127,6 +133,7 @@ public class MemberController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
+    @Operation(summary = "회원 삭제")
     public String delete(@PathVariable Long id) {
         Member member = memberService.findById(id);
 
