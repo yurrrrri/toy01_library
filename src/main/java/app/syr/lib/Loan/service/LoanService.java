@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -37,6 +38,10 @@ public class LoanService {
         if (loan.isEmpty()) return null;
 
         return loan.get();
+    }
+
+    public List<Loan> findAll() {
+        return loanRepository.findAll();
     }
 
     public RsData<Loan> borrow(Member member, Book book) {

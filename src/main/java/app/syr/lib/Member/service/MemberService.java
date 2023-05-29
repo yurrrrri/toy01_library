@@ -64,6 +64,10 @@ public class MemberService {
         return member.get();
     }
 
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
+
     public RsData<Member> modify(Member member, String password, String email, String phoneNumber) {
         Member modifiedMember = member
                 .toBuilder()

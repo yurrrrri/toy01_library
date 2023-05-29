@@ -9,9 +9,12 @@ import app.syr.lib.base.rsData.RsData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,8 +31,22 @@ public class AdmController {
         return "/adm/main";
     }
 
+    @GetMapping("/members")
+    public String showMembers(Model model) {
+        List<Member> members = memberService.findAll();
+        model.addAttribute("members", members);
+        return "/adm/members";
+    }
+
+    @GetMapping("/loans")
+    public String showLoans(Model model) {
+        List<Loan> loans = loanService.findAll();
+        model.addAttribute("loans", loans);
+        return "/adm/loans";
+    }
+
     // 회원 삭제
-    @GetMapping("/member/delete/{id}")
+    @GetMapping("/members/delete/{id}")
     public String deleteMember(@PathVariable Long id) {
         Member member = memberService.findById(id);
 
@@ -40,7 +57,7 @@ public class AdmController {
     }
 
     // 대출 기록 삭제
-    @GetMapping("/delete/{id}")
+    @GetMapping("/loan/delete/{id}")
     public String deleteLoan(@PathVariable Long id) {
         Loan loan = loanService.findById(id);
 
