@@ -12,3 +12,7 @@ body {
     height: 100%;
     font-family: "SUITE-Regular";
 }
+
+main {
+    flex-grow: 1;
+}

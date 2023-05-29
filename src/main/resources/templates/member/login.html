@@ -1,20 +1,31 @@
-<div class="container my-3">
-    <form th:action="@{/member/login}" method="post">
-        <div th:if="${param.error}">
-            <div class="alert alert-danger">
-                아이디 또는 비밀번호를 확인해 주세요.
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="username" class="form-label">아이디</label>
-            <input type="text" name="username" id="username" class="form-control">
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" name="password" id="password" class="form-control">
-        </div>
-        <button type="submit" class="btn btn-primary">로그인</button>
-    </form>
+<html layout:decorate="~{/layout/layout.html}">
 
-    <a href="/member/signup" class="btn btn-primary">회원가입</a>
-</div>
+<head>
+    <title>로그인 | SYR 도서관</title>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+    <div class="container my-3">
+        <form th:action="@{/member/login}" method="post">
+            <div th:if="${param.error}">
+                <div class="alert alert-danger">
+                    아이디 또는 비밀번호를 확인해 주세요.
+                </div>
+            </div>
+            <div class="mb-3 form-control">
+                <input type="text" placeholder="아이디" name="username" id="username">
+            </div>
+            <div class="mb-3 form-control">
+                <input type="password" placeholder="비밀번호" name="password" id="password">
+            </div>
+            <button class="btn btn-primary">로그인</button>
+        </form>
+        <a href="/member/signup" class="btn btn-primary">회원가입</a>
+    </div>
+</main>
+
+</body>
+
+</html>

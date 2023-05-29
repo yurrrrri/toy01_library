@@ -5,16 +5,13 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
     <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
 
-    <script src="/resource/common/common.css"></script>
+    <link rel="stylesheet" href="/resource/common/common.css">
     <script src="/resource/common/common.js"></script>
-
-    <title>도서 관리 시스템</title>
 
     <script>
         const params = JSON.parse('[( ${@rq.paramsJsonStr} )]');
@@ -22,11 +19,10 @@
 </head>
 
 <body>
-
 <link href="https://cdn.jsdelivr.net/npm/daisyui@2.51.5/dist/full.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.tailwindcss.com"></script>
 
-<div class="min-h-screen flex flex-col pb-10">
+<div class="min-h-screen flex flex-col pb-10 flex-grow flex items-center justify-center">
     <main layout:fragment="main"></main>
 </div>
 
@@ -39,6 +35,8 @@
         toastWarning(params.errorMsg[0]);
     }
 
+    // history.back 에 의해서 돌아온 경우에 실행됨
+    // 평소에도 실행됨
     $(window).bind("pageshow", function (event) {
         const localStorageKeyAboutHistoryBackErrorMsg = "historyBackErrorMsg___" + location.href;
 

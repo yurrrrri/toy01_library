@@ -20,10 +20,6 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()
                 .formLogin(formLogin -> formLogin.loginPage("/member/login"))
                 .logout(logout -> logout.logoutUrl("/member/logout")
                         .logoutSuccessUrl("/member/login"));

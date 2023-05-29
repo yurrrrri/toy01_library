@@ -14,7 +14,12 @@ import lombok.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -27,14 +32,11 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/signup")
-    public String signup(Model model) {
-        model.addAttribute("memberCreateForm", new MemberCreateForm());
+    public String signup() {
         return "/member/signup";
     }
 
     @Getter
-    @Setter
-    @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberCreateForm {
 
@@ -61,10 +63,10 @@ public class MemberController {
     @PreAuthorize("isAnonymous()")
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
-    public String signup(@Valid @ModelAttribute("memberCreateForm") MemberCreateForm form) {
+    public String signup(@Valid MemberCreateForm form) {
         RsData<Member> rs = memberService.create(form.getUsername(), form.getPassword1(), form.getPassword2(), form.getEmail(), form.getPhoneNumber());
 
-        if (rs.isFail()) return rq.historyBack("다시 입력해주세요.");
+        if (rs.isFail()) return rq.historyBack(rs.getMsg());
 
         return rq.redirectWithMsg("/member/login", rs.getMsg());
     }
