@@ -119,7 +119,7 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     @Operation(summary = "회원 정보 수정")
-    public String modify(@PathVariable Long id, @ModelAttribute("memberModifyForm") MemberModifyForm form) {
+    public String modify(@PathVariable Long id, @Valid MemberModifyForm form) {
         Member member = memberService.findById(id);
 
         if (!member.getUsername().equals(rq.getMember().getUsername())) {

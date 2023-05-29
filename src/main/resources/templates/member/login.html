@@ -1,26 +1,41 @@
-<html layout:decorate="~{/layout/layout.html}">
+<html layout:decorate="~{layout.html}">
 
 <head>
-    <title>로그인 | SYR 도서관</title>
+    <title>로그인 | SYR Library</title>
 </head>
 
 <body>
 
 <main layout:fragment="main">
-    <div class="container my-3">
-        <form th:action="@{/member/login}" method="post">
-            <div th:if="${param.error}">
-                <div class="alert alert-danger">
-                    아이디 또는 비밀번호를 확인해 주세요.
-                </div>
-            </div>
+    <script>
+        function Validation__login(form) {
+            form.username.value = form.username.value.trim();
+            if(form.username.value.length < 4 || form.username.value.length > 20) {
+                toastWarning("아이디는 4자 이상 20자 이하여야 합니다.");
+                form.username.focus();
+                return;
+            }
+
+            form.password.value = form.password.value.trim();
+            if(form.password.value.length < 6 || form.password.value.length > 20) {
+                toastWarning("비밀번호는 6자 이상 20자 이하여야 합니다.");
+                form.password.focus();
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
+
+    <div class="min-h-screen flex flex-col pb-10 flex-grow flex items-center justify-center">
+        <form th:action="@{/member/login}" method="post" onsubmit="Validation__login(this); return false;">
             <div class="mb-3 form-control">
                 <input type="text" placeholder="아이디" name="username" id="username">
             </div>
             <div class="mb-3 form-control">
                 <input type="password" placeholder="비밀번호" name="password" id="password">
             </div>
-            <button class="btn btn-primary">로그인</button>
+            <button type="submit" class="btn btn-primary">로그인</button>
         </form>
         <a href="/member/signup" class="btn btn-primary">회원가입</a>
     </div>

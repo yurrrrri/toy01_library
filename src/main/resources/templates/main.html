@@ -1,15 +1,17 @@
 <html layout:decorate="~{layout.html}">
 
 <head>
-    <title>메인 | SYR 도서관</title>
+    <title>메인 | SYR Library</title>
 </head>
 
 <body>
 
 <main layout:fragment="main">
-    <a href="/member/login" th:if="${@rq.logout}">로그인</a>
-    <a href="/" th:if="${@rq.login}" onclick="$(this).next().submit();">로그아웃</a>
-    <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
+    <div class="min-h-screen flex flex-col pb-10 flex-grow flex items-center justify-center">
+        <a href="/member/login" th:if="${@rq.logout}">로그인</a>
+        <a href="/" th:if="${@rq.login}" onclick="$(this).next().submit();">로그아웃</a>
+        <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
+    </div>
 </main>
 
 </body>
