@@ -1,5 +1,6 @@
 package app.syr.lib.book.service;
 
+import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.repository.BookRepository;
 import app.syr.lib.category.entity.Category;
@@ -21,7 +22,7 @@ public class BookService {
     public Book findById(Long id) {
         Optional<Book> book = bookRepository.findById(id);
 
-        if(book.isEmpty()) return null;
+        if (book.isEmpty()) return null;
 
         return book.get();
     }
@@ -59,5 +60,23 @@ public class BookService {
         String title = book.getTitle();
         bookRepository.delete(book);
         return title;
+    }
+
+    public void whenAfterLoan(Loan loan) {
+        Book book = loan.getBook();
+        Book book1 = book
+                .toBuilder()
+                .isOnLoan(true)
+                .build();
+        bookRepository.save(book1);
+    }
+
+    public void whenAfterReturn(Loan loan) {
+        Book book = loan.getBook();
+        Book book1 = book
+                .toBuilder()
+                .isOnLoan(false)
+                .build();
+        bookRepository.save(book1);
     }
 }

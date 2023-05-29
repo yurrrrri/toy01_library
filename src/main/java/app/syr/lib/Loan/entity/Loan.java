@@ -11,6 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @AllArgsConstructor
@@ -24,6 +26,11 @@ public class Loan extends BaseEntity {
     @OneToOne
     private Book book;
 
-    private boolean isOverdue; // 연체되었는지?
+    private LocalDateTime deadline;
+
+    public boolean isOverdue() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.isAfter(deadline);
+    }
 
 }

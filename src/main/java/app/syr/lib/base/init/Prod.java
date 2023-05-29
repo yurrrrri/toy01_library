@@ -1,7 +1,5 @@
 package app.syr.lib.base.init;
 
-import app.syr.lib.Member.entity.Member;
-import app.syr.lib.Member.service.MemberService;
 import app.syr.lib.category.entity.Category;
 import app.syr.lib.category.service.CategoryService;
 import org.springframework.boot.CommandLineRunner;

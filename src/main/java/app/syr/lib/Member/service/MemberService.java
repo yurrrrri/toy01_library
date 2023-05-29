@@ -1,5 +1,6 @@
 package app.syr.lib.Member.service;
 
+import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.repository.MemberRepository;
 import app.syr.lib.base.rsData.RsData;
@@ -8,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -18,9 +20,9 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public RsData<Member> create(String username, String password1, String password2, String email, String phoneNumber) {
-        RsData canCreateRs = canCreate(username, password1, password2, email, phoneNumber);
+        RsData rs = canBorrow(username, password1, password2);
 
-        if(canCreateRs.isFail()) return canCreateRs;
+        if (rs.isFail()) return rs;
 
         Member member = Member
                 .builder()
@@ -34,12 +36,12 @@ public class MemberService {
         return RsData.of("S-1", "회원가입 되었습니다.", member);
     }
 
-    private RsData canCreate(String username, String password1, String password2, String email, String phoneNumber) {
-        if(findByUsername(username) != null) {
+    private RsData canBorrow(String username, String password1, String password2) {
+        if (findByUsername(username) != null) {
             return RsData.of("F-1", "이미 존재하는 아이디입니다.");
         }
 
-        if(!password1.equals(password2)) {
+        if (!password1.equals(password2)) {
             return RsData.of("F-2", "2개의 비밀번호가 일치하지 않습니다.");
         }
 
@@ -62,7 +64,7 @@ public class MemberService {
         return member.get();
     }
 
-    public Member modify(Member member, String password, String email, String phoneNumber) {
+    public RsData<Member> modify(Member member, String password, String email, String phoneNumber) {
         Member modifiedMember = member
                 .toBuilder()
                 .password(passwordEncoder.encode(password))
@@ -70,26 +72,50 @@ public class MemberService {
                 .phoneNumber(phoneNumber)
                 .build();
 
+        String username = modifiedMember.getUsername();
         memberRepository.save(modifiedMember);
-        return modifiedMember;
+        return RsData.of("S-1", "%s 회원의 정보가 수정되었습니다.".formatted(username), modifiedMember);
     }
 
     // soft-delete
-    public String delete(Member member) {
+    public RsData delete(Member member) {
         String username = member.getUsername();
         Member member1 = member
                 .toBuilder()
                 .deleteDate(LocalDateTime.now())
                 .build();
         memberRepository.save(member1);
-        return username;
+        return RsData.of("S-1", "%s 회원의 탈퇴가 완료되었습니다.".formatted(username));
     }
 
     // hard-delete
-    public String hardDelete(Member member) {
+    public RsData deleteHard(Member member) {
         String username = member.getUsername();
         memberRepository.delete(member);
-        return username;
+        return RsData.of("S-1", "%s 회원이 삭제되었습니다.".formatted(username));
     }
 
+    public void whenAfterLoan(Loan loan) {
+        Member member = loan.getMember();
+        List<Loan> listAfterAdd = member.getLoanList();
+        listAfterAdd.add(loan);
+
+        Member member1 = member
+                .toBuilder()
+                .loanList(listAfterAdd)
+                .build();
+        memberRepository.save(member1);
+    }
+
+    public void whenAfterReturn(Loan loan) {
+        Member member = loan.getMember();
+        List<Loan> listAfterReturn = member.getLoanList();
+        listAfterReturn.remove(loan);
+
+        Member member1 = member
+                .toBuilder()
+                .loanList(listAfterReturn)
+                .build();
+        memberRepository.save(member1);
+    }
 }

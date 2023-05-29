@@ -1,7 +1,6 @@
 package app.syr.lib.category.controller;
 
 import app.syr.lib.base.rq.Rq;
-import app.syr.lib.book.entity.Book;
 import app.syr.lib.category.entity.Category;
 import app.syr.lib.category.service.CategoryService;
 import jakarta.validation.Valid;

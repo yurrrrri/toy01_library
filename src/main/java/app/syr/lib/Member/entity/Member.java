@@ -1,7 +1,7 @@
 package app.syr.lib.Member.entity;
 
-import app.syr.lib.base.entity.BaseEntity;
 import app.syr.lib.Loan.entity.Loan;
+import app.syr.lib.base.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;

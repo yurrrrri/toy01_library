@@ -11,15 +11,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.security.Principal;
 
 @RequiredArgsConstructor
 @Controller
@@ -69,9 +64,9 @@ public class MemberController {
     public String signup(@Valid @ModelAttribute("memberCreateForm") MemberCreateForm form) {
         RsData<Member> rs = memberService.create(form.getUsername(), form.getPassword1(), form.getPassword2(), form.getEmail(), form.getPhoneNumber());
 
-        if(rs.isFail()) return rq.historyBack("다시 입력해주세요.");
+        if (rs.isFail()) return rq.historyBack("다시 입력해주세요.");
 
-        return rq.redirectWithMsg("/member/login", "회원가입 되었습니다.");
+        return rq.redirectWithMsg("/member/login", rs.getMsg());
     }
 
     @PreAuthorize("isAnonymous()")
@@ -112,7 +107,9 @@ public class MemberController {
     public String modify(@PathVariable Long id) {
         Member member = memberService.findById(id);
 
-        if (member == null) return "redirect:/member/login";
+        if (member == null) {
+            return rq.historyBack("존재하지 않는 회원입니다.");
+        }
 
         return "member/modify";
     }
@@ -120,31 +117,34 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     @Operation(summary = "회원 정보 수정")
-    public String modify(@PathVariable Long id, MemberModifyForm form) {
+    public String modify(@PathVariable Long id, @ModelAttribute("memberModifyForm") MemberModifyForm form) {
         Member member = memberService.findById(id);
 
         if (!member.getUsername().equals(rq.getMember().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다");
+            return rq.historyBack("수정 권한이 없습니다.");
         }
 
-        memberService.modify(member, form.getPassword1(), form.getEmail(), form.getPhoneNumber());
-        return rq.redirectWithMsg("member/mypage", "회원 정보가 수정되었습니다.");
+        RsData<Member> rs = memberService.modify(member, form.getPassword1(), form.getEmail(), form.getPhoneNumber());
+        return rq.redirectWithMsg("member/mypage", rs.getMsg());
     }
 
     // soft-delete
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    @Operation(summary = "회원 삭제")
+    @Operation(summary = "회원 삭제 - soft")
     public String delete(@PathVariable Long id) {
         Member member = memberService.findById(id);
-        String username = member.getUsername();
 
-        if (!member.getUsername().equals(rq.getMember().getUsername())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다");
+        if (member == null) {
+            return rq.historyBack("존재하지 않는 회원입니다.");
         }
 
-        memberService.delete(member);
-        return rq.redirectWithMsg("member/logout", "%s 회원의 탈퇴가 완료되었습니다.".formatted(username));
+        if (!member.getUsername().equals(rq.getMember().getUsername())) {
+            return rq.historyBack("삭제 권한이 없습니다.");
+        }
+
+        RsData rs = memberService.delete(member);
+        return rq.redirectWithMsg("member/logout", rs.getMsg());
     }
 
 }

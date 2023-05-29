@@ -36,7 +36,7 @@ public class Rq {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication.getPrincipal() instanceof User) {
+        if (authentication.getPrincipal() instanceof User) {
             this.user = (User) authentication.getPrincipal();
         } else this.user = null;
     }
@@ -50,9 +50,9 @@ public class Rq {
     }
 
     public Member getMember() {
-        if(isLogout()) return null;
+        if (isLogout()) return null;
 
-        if(member == null) {
+        if (member == null) {
             member = memberService.findByUsername(user.getUsername());
         }
 
@@ -85,7 +85,7 @@ public class Rq {
     }
 
     private String msgWithTtl(String msg) {
-        return Url.encode(msg)+ ";ttl=" + new Date().getTime();
+        return Url.encode(msg) + ";ttl=" + new Date().getTime();
     }
 
     public static class Url {
