@@ -88,7 +88,7 @@ public class MemberController {
     }
 
     @Getter
-    @Builder
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberModifyForm {
@@ -96,7 +96,7 @@ public class MemberController {
         @NotBlank(message = "비밀번호를 입력해주세요.")
         private String password1;
 
-        @NotBlank(message = "비밀번호를 입력해주세요.")
+        @NotBlank(message = "비밀번호를 한 번 더 입력해주세요.")
         private String password2;
 
         @Email
@@ -131,19 +131,20 @@ public class MemberController {
         return rq.redirectWithMsg("member/mypage", "회원 정보가 수정되었습니다.");
     }
 
+    // soft-delete
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     @Operation(summary = "회원 삭제")
     public String delete(@PathVariable Long id) {
         Member member = memberService.findById(id);
+        String username = member.getUsername();
 
         if (!member.getUsername().equals(rq.getMember().getUsername())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다");
         }
 
-        // soft-delete
         memberService.delete(member);
-        return rq.redirectWithMsg("member/logout", "탈퇴가 완료되었습니다.");
+        return rq.redirectWithMsg("member/logout", "%s 회원의 탈퇴가 완료되었습니다.".formatted(username));
     }
 
 }

@@ -29,14 +29,14 @@ public class BookController {
     }
 
     @RolesAllowed("ADMIN")
-    @GetMapping("/add")
+    @GetMapping("/create")
     public String create() {
-        return "/book/add";
+        return "/book/create";
     }
 
     @Data
     @AllArgsConstructor
-    public static class BookCreateForm {
+    public static class BookForm {
         @NotBlank
         private String title;
         @NotBlank
@@ -45,8 +45,8 @@ public class BookController {
         private String category;
     }
 
-    @PostMapping("/add")
-    public String create(@Valid BookCreateForm form) {
+    @PostMapping("/create")
+    public String create(@Valid BookForm form) {
         Book book = bookService.create(form.getTitle(), form.getAuthor(), form.getCategory());
         return rq.redirectWithMsg("/book/list", "새로운 도서가 등록되었습니다.");
     }
@@ -57,31 +57,22 @@ public class BookController {
         return "/book/modify";
     }
 
-    @Data
-    @AllArgsConstructor
-    public static class BookModifyForm {
-        @NotBlank
-        private String title;
-        @NotBlank
-        private String author;
-        @NotBlank
-        private String category;
-    }
-
     @PostMapping("/modify/{id}")
-    public String modify(@Valid BookModifyForm form, @PathVariable Long id) {
+    public String modify(@Valid BookForm form, @PathVariable Long id) {
         Book book = bookService.findById(id);
         bookService.modify(book, form.getTitle(), form.getAuthor(), form.getCategory());
         return rq.redirectWithMsg("/book/list", "도서 정보가 수정되었습니다.");
     }
 
+    // hard-delete
     @RolesAllowed("ADMIN")
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         Book book = bookService.findById(id);
+        String title = book.getTitle();
         bookService.delete(book);
 
-        return rq.redirectWithMsg("/book/list", "도서가 삭제되었습니다.");
+        return rq.redirectWithMsg("/book/list", "%s 도서가 삭제되었습니다.".formatted(title));
     }
 
 }

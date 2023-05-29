@@ -28,4 +28,30 @@ public class CategoryService {
 
         return category.get();
     }
+
+    public Category create(String name) {
+        Category category = Category
+                .builder()
+                .name(name)
+                .build();
+
+        categoryRepository.save(category);
+        return category;
+    }
+
+    public Category modify(Category category, String name) {
+        Category category1 = category
+                .toBuilder()
+                .name(name)
+                .build();
+        categoryRepository.save(category1);
+        return category1;
+    }
+
+    // hard-delete
+    public String delete(Category category) {
+        String name = category.getName();
+        categoryRepository.delete(category);
+        return name;
+    }
 }

@@ -54,7 +54,10 @@ public class BookService {
         return book1;
     }
 
-    public void delete(Book book) {
+    // hard-delete
+    public String delete(Book book) {
+        String title = book.getTitle();
         bookRepository.delete(book);
+        return title;
     }
 }

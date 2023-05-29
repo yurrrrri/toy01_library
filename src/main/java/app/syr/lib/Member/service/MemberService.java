@@ -75,13 +75,21 @@ public class MemberService {
     }
 
     // soft-delete
-    public void delete(Member member) {
-        member.toBuilder().deleteDate(LocalDateTime.now()).build();
+    public String delete(Member member) {
+        String username = member.getUsername();
+        Member member1 = member
+                .toBuilder()
+                .deleteDate(LocalDateTime.now())
+                .build();
+        memberRepository.save(member1);
+        return username;
     }
 
     // hard-delete
-    public void hardDelete(Member member) {
+    public String hardDelete(Member member) {
+        String username = member.getUsername();
         memberRepository.delete(member);
+        return username;
     }
 
 }

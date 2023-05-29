@@ -5,6 +5,7 @@ import app.syr.lib.book.entity.Book;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)

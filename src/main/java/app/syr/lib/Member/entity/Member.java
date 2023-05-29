@@ -1,7 +1,7 @@
 package app.syr.lib.Member.entity;
 
 import app.syr.lib.base.entity.BaseEntity;
-import app.syr.lib.borrow.entity.Borrow;
+import app.syr.lib.Loan.entity.Loan;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
@@ -37,7 +37,7 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
     @Builder.Default
-    private List<Borrow> borrowList = new ArrayList<>();
+    private List<Loan> loanList = new ArrayList<>();
 
     private LocalDateTime timeout; // 연체했을 때 대출 가능해지는 시간 저장
 
