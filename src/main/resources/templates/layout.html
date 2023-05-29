@@ -16,8 +16,8 @@
     <link rel="stylesheet" href="https://jhs512.github.io/toastr/toastr.css">
 </head>
 
-<body>
-<nav class="navbar bg-base-100 flex drop-shadow-md">
+<body class="flex flex-col">
+<nav class="flex-none navbar bg-base-100 flex drop-shadow-md">
     <div class="navbar-start">
         <div class="dropdown">
             <label tabindex="0" class="btn btn-ghost btn-circle">
@@ -25,24 +25,27 @@
             </label>
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                 <li th:if="${@rq.logout}">
-                    <a href="/member/login">Login</a>
+                    <a href="/member/login">로그인</a>
                 </li>
                 <li th:if="${@rq.login}">
-                    <a href="#">My Page</a>
+                    <a href="/book/list">
+                        <i class="fa-solid fa-book"></i>
+                        <span>나의 대출 목록</span>
+                    </a>
                 </li>
                 <li th:if="${@rq.login}">
-                    <a href="javascript:" onclick="$(this).next().submit();">Logout</a>
+                    <a href="javascript:" onclick="$(this).next().submit();">로그아웃</a>
                     <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
                 </li>
             </ul>
         </div>
     </div>
     <div class="navbar-center justify-content hidden sm:block">
-        <a href="/shop" class="btn btn-ghost normal-case">PLANBTI</a>
+        <a href="/" class="btn btn-ghost normal-case">SYR Library</a>
     </div>
     <div class="navbar-end pr-4">
         <a href="/book/list" th:if="${@rq.login}" class="btn btn-ghost btn-circle">
-            <i class="fa-solid fa-book"></i>
+            <i class="fa-solid fa-book"></i>나의 대출 기록
         </a>
         <a href="/member/login" th:if="${@rq.logout}" class="btn btn-ghost">
             로그인
@@ -53,9 +56,11 @@
     </div>
 </nav>
 
-<main layout:fragment="main"></main>
+<div class="flex flex-col items-center justify-center min-h-screen min-w-full">
+    <main layout:fragment="main"></main>
+</div>
 
-<footer class="bg-green-100 py-8">
+<footer class="flex-none bg-gray-100 py-8">
     <div class="container mx-auto text-center">
         <p><i class="fa-regular fa-copyright"></i> 2023 <b>SYR Library</b>. All rights reserved.</p>
     </div>
