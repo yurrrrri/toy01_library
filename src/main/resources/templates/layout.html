@@ -24,9 +24,16 @@
                 <i class="fa-solid fa-bars"></i>
             </label>
             <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
-                <li><a href="/member/login" th:if="${@rq.logout}">Login</a></li>
-                <li><a href="#" th:if="${@rq.login}">My Page</a></li>
-                <li><a href="/member/logout" th:if="${@rq.login}">Logout</a></li>
+                <li th:if="${@rq.logout}">
+                    <a href="/member/login">Login</a>
+                </li>
+                <li th:if="${@rq.login}">
+                    <a href="#">My Page</a>
+                </li>
+                <li th:if="${@rq.login}">
+                    <a href="javascript:" onclick="$(this).next().submit();">Logout</a>
+                    <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
+                </li>
             </ul>
         </div>
     </div>
@@ -34,13 +41,13 @@
         <a href="/shop" class="btn btn-ghost normal-case">PLANBTI</a>
     </div>
     <div class="navbar-end pr-4">
-        <a href="/book/list" class="btn btn-ghost btn-circle">
+        <a href="/book/list" th:if="${@rq.login}" class="btn btn-ghost btn-circle">
             <i class="fa-solid fa-book"></i>
         </a>
-        <a href="/member/login" class="btn btn-ghost">
+        <a href="/member/login" th:if="${@rq.logout}" class="btn btn-ghost">
             로그인
         </a>
-        <a href="/member/signup" class="btn btn-active btn-sm">
+        <a href="/member/signup" th:if="${@rq.logout}" class="btn btn-active btn-sm">
             회원가입
         </a>
     </div>

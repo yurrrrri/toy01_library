@@ -21,8 +21,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .formLogin(formLogin -> formLogin.loginPage("/member/login"))
-                .logout(logout -> logout.logoutUrl("/member/logout")
-                        .logoutSuccessUrl("/member/login"));
+                .logout(logout -> logout.logoutUrl("/member/logout"));
 
         return http.build();
     }

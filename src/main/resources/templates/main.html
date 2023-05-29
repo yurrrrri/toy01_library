@@ -8,9 +8,7 @@
 
 <main layout:fragment="main">
     <div class="min-h-screen flex flex-col pb-10 flex-grow flex items-center justify-center">
-        <a href="/member/login" th:if="${@rq.logout}">로그인</a>
-        <a href="/" th:if="${@rq.login}" onclick="$(this).next().submit();">로그아웃</a>
-        <form class="!hidden" hidden th:action="|/member/logout|" method="POST"></form>
+
     </div>
 </main>
 
