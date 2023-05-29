@@ -7,8 +7,26 @@
 <body>
 
 <main layout:fragment="main">
+    <script>
+        function Validation__book(form) {
+            if(form.title.value.length === 0) {
+                toastWarning("도서 제목을 입력해주세요.");
+                form.title.focus();
+                return;
+            }
+
+            if(form.author.value.length === 0) {
+                toastWarning("저자 이름을 입력해주세요.");
+                form.author.focus();
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
+
     <div class="flex flex-col max-w-2xl min-w-full">
-        <form th:action="@{/book/create}" method="post">
+        <form th:action="@{/book/create}" method="post" onsubmit="Validation__book(this); return false;">
             <div class="input input-bordered mt-12 form-control">
                 <input type="text" placeholder="도서 제목" name="title" id="title">
             </div>
@@ -16,7 +34,6 @@
                 <input type="text" placeholder="저자 이름" name="author" id="author">
             </div>
             <select class="select select-bordered w-full mt-12 form-control">
-                <option disabled selected>카테고리</option>
                 <option th:each="category: ${categories}" th:text="${category.getName()}"></option>
             </select>
             <button type="submit" class="btn btn-active btn-primary w-full mt-12">도서 등록</button>

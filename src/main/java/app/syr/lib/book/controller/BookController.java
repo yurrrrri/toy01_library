@@ -49,7 +49,6 @@ public class BookController {
         private String title;
         @NotBlank
         private String author;
-        @NotBlank
         private String category;
     }
 
