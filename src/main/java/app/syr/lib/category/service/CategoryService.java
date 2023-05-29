@@ -5,6 +5,7 @@ import app.syr.lib.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -27,6 +28,10 @@ public class CategoryService {
         if (category.isEmpty()) return null;
 
         return category.get();
+    }
+
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
     }
 
     public Category create(String name) {

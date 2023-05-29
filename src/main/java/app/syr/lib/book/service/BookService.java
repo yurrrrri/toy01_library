@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,6 +26,10 @@ public class BookService {
         if (book.isEmpty()) return null;
 
         return book.get();
+    }
+
+    public List<Book> findAll() {
+        return bookRepository.findAll();
     }
 
     public Book create(String title, String author, String category) {
