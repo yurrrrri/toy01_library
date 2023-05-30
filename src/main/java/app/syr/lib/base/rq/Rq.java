@@ -49,6 +49,10 @@ public class Rq {
         return !isLogin();
     }
 
+    public boolean isAdmin() {
+        return getMember().getUsername().equals("ADMIN");
+    }
+
     public Member getMember() {
         if (isLogout()) return null;
 

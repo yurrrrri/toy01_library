@@ -18,8 +18,11 @@
                     <div class="card-body">
                         <div class="card-actions justify-end">
                             <p th:text="${book.getTitle()}"></p>
-                            <a href="|/book/modify/${book.getId()}|" class="btn btn-square btn-xs">
+                            <a href="|/book/modify/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-xs">
                                 수정
+                            </a>
+                            <a href="|/book/delete/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-xs">
+                                삭제
                             </a>
                         </div>
                         <p th:text="${book.getAuthor()}"></p>

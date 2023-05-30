@@ -86,8 +86,6 @@ public class LoanService {
 
         Loan returned = loan
                 .toBuilder()
-                .member(null)
-                .book(null)
                 .deadline(null)
                 .deleteDate(LocalDateTime.now())
                 .build();
@@ -95,17 +93,6 @@ public class LoanService {
 
         publisher.publishEvent(new EventAfterReturn(this, loan));
         return RsData.of("S-1", "%s 도서가 반납되었습니다.".formatted(title));
-    }
-
-    // hard-delete by Book Id
-    public RsData deleteByBookId(Long bookId) {
-        Loan loan = findByBook_Id(bookId);
-
-        if (loan == null) return RsData.of("F-1", "존재하지 않는 대출 기록입니다.");
-
-        Long id = loan.getId();
-        loanRepository.delete(loan);
-        return RsData.of("S-1", "%d번 대출 기록이 삭제되었습니다.".formatted(id));
     }
 
     // hard-delete by Loan Entity

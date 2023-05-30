@@ -17,8 +17,11 @@
                 <div class="card w-96 bg-base-100 shadow-xl m-10">
                     <div class="card-body">
                         <div class="card-actions justify-end">
-                            <a href="|/category/modify/${category.getId()}|" class="btn btn-square btn-sm">
+                            <a href="|/category/modify/${category.getId()}|" class="btn btn-sm">
                                 수정
+                            </a>
+                            <a href="|/category/delete/${category.getId()}|" class="btn btn-sm">
+                                삭제
                             </a>
                         </div>
                         <p th:text="${category.getName()}"></p>
