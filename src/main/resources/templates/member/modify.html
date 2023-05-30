@@ -1,1 +1,66 @@
-회원 수정 화면
+<html layout:decorate="~{layout.html}">
+
+<head>
+    <title>회원 정보 수정 | SYR Library</title>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+    <script>
+        function Validation__modify(form) {
+
+            form.password1.value = form.password1.value.trim();
+            if (form.password1.value.length < 6 || form.password1.value.length > 20) {
+                toastWarning("비밀번호는 6자 이상 20자 이하여야 합니다.");
+                form.password1.focus();
+                return;
+            }
+
+            if (form.password1.value != form.password2.value.trim()) {
+                toastWarning("비밀번호가 일치하지 않습니다.");
+                form.password2.focus();
+                return;
+            }
+
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!regex.test(form.email.value.trim())) {
+                toastWarning("이메일 주소를 정확히 입력해주세요.");
+                form.email.focus();
+                return;
+            }
+
+            const regex2 = /^\d{3}-\d{3,4}-\d{4}$/;
+            if (!regex2.test(form.phoneNumber.value.trim())) {
+                toastWarning("휴대폰 번호를 정확히 입력해주세요.");
+                form.phoneNumber.focus();
+                return;
+            }
+
+            form.submit();
+        }
+    </script>
+
+    <div class="flex flex-col max-w-2xl">
+        <form th:action="@{/member/modify}" th:object="${MemberModifyForm}" method="POST"
+              onsubmit="Validation__modify(this); return false;">
+            <div class="input input-bordered mt-12 form-control">
+                <input type="password" placeholder="비밀번호" name="password1" id="password1">
+            </div>
+            <div class="input input-bordered mt-12 form-control">
+                <input type="password" placeholder="확인 비밀번호" name="password2" id="password2">
+            </div>
+            <div class="input input-bordered mt-12 form-control">
+                <input type="email" placeholder=이메일 name="email" id="email">
+            </div>
+            <div class="input input-bordered mt-12 form-control">
+                <input type="text" placeholder="휴대폰 번호" name="phoneNumber" id="phoneNumber">
+            </div>
+            <button class="btn btn-active btn-primary w-96 mt-12">저장하기</button>
+        </form>
+    </div>
+</main>
+
+</body>
+
+</html>

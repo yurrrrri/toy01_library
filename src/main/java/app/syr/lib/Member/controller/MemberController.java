@@ -89,13 +89,14 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/modify/{id}")
     @Operation(summary = "회원 정보 수정")
-    public String modify(@PathVariable Long id) {
+    public String modify(@PathVariable Long id, Model model) {
         Member member = memberService.findByIdAndDeleteDateIsNull(id);
 
         if (member == null) {
             return rq.historyBack("존재하지 않는 회원입니다.");
         }
 
+        model.addAttribute("member", member);
         return "member/modify";
     }
 
@@ -124,6 +125,10 @@ public class MemberController {
     @Operation(summary = "회원 정보 수정")
     public String modify(@PathVariable Long id, @Valid MemberModifyForm form) {
         Member member = memberService.findByIdAndDeleteDateIsNull(id);
+
+        if (member == null) {
+            return rq.historyBack("존재하지 않는 회원입니다.");
+        }
 
         if (!member.getUsername().equals(rq.getMember().getUsername())) {
             return rq.historyBack("수정 권한이 없습니다.");
