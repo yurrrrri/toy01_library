@@ -1,6 +1,7 @@
 package app.syr.lib.book.controller;
 
 import app.syr.lib.base.rq.Rq;
+import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.service.BookService;
 import app.syr.lib.category.entity.Category;
@@ -30,7 +31,9 @@ public class BookController {
     private final Rq rq;
 
     @GetMapping("/list")
-    public String showList() {
+    public String showList(Model model) {
+        List<Book> books = bookService.findAll();
+        model.addAttribute(books);
         return "book/list";
     }
 
@@ -54,21 +57,27 @@ public class BookController {
 
     @PostMapping("/create")
     public String create(@Valid BookForm form) {
-        Book book = bookService.create(form.getTitle(), form.getAuthor(), form.getCategory());
-        return rq.redirectWithMsg("/book/list", "새로운 도서가 등록되었습니다.");
+        RsData rs = bookService.create(form.getTitle(), form.getAuthor(), form.getCategory());
+        return rq.redirectWithMsg("/book/list", rs.getMsg());
     }
 
     @RolesAllowed("ADMIN")
     @GetMapping("/modify/{id}")
-    public String modify(@PathVariable Long id) {
+    public String modify(Model model, @PathVariable Long id) {
+        Book book = bookService.findById(id);
+        model.addAttribute(book);
+
+        List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
+
         return "/book/modify";
     }
 
     @PostMapping("/modify/{id}")
     public String modify(@Valid BookForm form, @PathVariable Long id) {
         Book book = bookService.findById(id);
-        bookService.modify(book, form.getTitle(), form.getAuthor(), form.getCategory());
-        return rq.redirectWithMsg("/book/list", "도서 정보가 수정되었습니다.");
+        RsData rs = bookService.modify(book, form.getTitle(), form.getAuthor(), form.getCategory());
+        return rq.redirectWithMsg("/book/list", rs.getMsg());
     }
 
     // hard-delete
@@ -76,10 +85,8 @@ public class BookController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         Book book = bookService.findById(id);
-        String title = book.getTitle();
-        bookService.delete(book);
-
-        return rq.redirectWithMsg("/book/list", "%s 도서가 삭제되었습니다.".formatted(title));
+        RsData rs = bookService.delete(book);
+        return rq.redirectWithMsg("/book/list", rs.getMsg());
     }
 
 }

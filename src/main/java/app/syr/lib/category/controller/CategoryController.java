@@ -1,6 +1,7 @@
 package app.syr.lib.category.controller;
 
 import app.syr.lib.base.rq.Rq;
+import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.category.entity.Category;
 import app.syr.lib.category.service.CategoryService;
 import jakarta.validation.Valid;
@@ -48,29 +49,29 @@ public class CategoryController {
 
     @PostMapping("/create")
     public String create(@Valid CategoryForm form) {
-        Category category = categoryService.create(form.getName());
-        return rq.redirectWithMsg("/category/list", "새로운 카테고리가 생성되었습니다.");
+        RsData rs = categoryService.create(form.getName());
+        return rq.redirectWithMsg("/category/list", rs.getMsg());
     }
 
     @GetMapping("/modify/{id}")
-    public String modify(@PathVariable Long id) {
+    public String modify(Model model, @PathVariable Long id) {
+        Category category = categoryService.findById(id);
+        model.addAttribute(category);
         return "/category/modify";
     }
 
     @PostMapping("/modify/{id}")
     public String modify(@Valid CategoryForm form, @PathVariable Long id) {
         Category category = categoryService.findById(id);
-        categoryService.modify(category, form.getName());
-        return rq.redirectWithMsg("/category/list", "카테고리 이름이 수정되었습니다.");
+        RsData rs = categoryService.modify(category, form.getName());
+        return rq.redirectWithMsg("/category/list", rs.getMsg());
     }
 
     // hard-delete
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         Category category = categoryService.findById(id);
-        String name = category.getName();
-        categoryService.delete(category);
-
-        return rq.redirectWithMsg("/category/list", "%s 카테고리가 삭제되었습니다.".formatted(name));
+        RsData rs = categoryService.delete(category);
+        return rq.redirectWithMsg("/category/list", rs.getMsg());
     }
 }

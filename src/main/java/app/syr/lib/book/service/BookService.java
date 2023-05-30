@@ -1,6 +1,7 @@
 package app.syr.lib.book.service;
 
 import app.syr.lib.Loan.entity.Loan;
+import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.repository.BookRepository;
 import app.syr.lib.category.entity.Category;
@@ -32,7 +33,7 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Book create(String title, String author, String category) {
+    public RsData<Book> create(String title, String author, String category) {
         Category category1 = categoryService.findByName(category);
 
         Book book = Book
@@ -43,10 +44,10 @@ public class BookService {
                 .build();
 
         bookRepository.save(book);
-        return book;
+        return RsData.of("S-1", "새로운 도서가 등록되었습니다.", book);
     }
 
-    public Book modify(Book book, String title, String author, String category) {
+    public RsData<Book> modify(Book book, String title, String author, String category) {
         Category category1 = categoryService.findByName(category);
 
         Book book1 = book
@@ -57,14 +58,14 @@ public class BookService {
                 .build();
 
         bookRepository.save(book1);
-        return book1;
+        return RsData.of("S-1", "도서 정보가 수정되었습니다.", book1);
     }
 
     // hard-delete
-    public String delete(Book book) {
+    public RsData delete(Book book) {
         String title = book.getTitle();
         bookRepository.delete(book);
-        return title;
+        return RsData.of("S-1", "%s 도서가 삭제되었습니다.".formatted(title));
     }
 
     public void whenAfterLoan(Loan loan) {

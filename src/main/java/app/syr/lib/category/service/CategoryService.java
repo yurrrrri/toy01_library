@@ -1,5 +1,6 @@
 package app.syr.lib.category.service;
 
+import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.category.entity.Category;
 import app.syr.lib.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,29 +35,29 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
-    public Category create(String name) {
+    public RsData<Category> create(String name) {
         Category category = Category
                 .builder()
                 .name(name)
                 .build();
 
         categoryRepository.save(category);
-        return category;
+        return RsData.of("S-1", "카테고리가 생성되었습니다.", category);
     }
 
-    public Category modify(Category category, String name) {
+    public RsData<Category> modify(Category category, String name) {
         Category category1 = category
                 .toBuilder()
                 .name(name)
                 .build();
         categoryRepository.save(category1);
-        return category1;
+        return RsData.of("S-1", "카테고리 이름이 수정되었습니다.", category1);
     }
 
     // hard-delete
-    public String delete(Category category) {
+    public RsData delete(Category category) {
         String name = category.getName();
         categoryRepository.delete(category);
-        return name;
+        return RsData.of("S-1", "%s 카테고리가 삭제되었습니다.".formatted(name));
     }
 }
