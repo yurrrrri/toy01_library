@@ -9,13 +9,13 @@
 <main layout:fragment="main">
     <script>
         function Validation__book(form) {
-            if(form.title.value.length === 0) {
+            if (form.title.value.length === 0) {
                 toastWarning("도서 제목을 입력해주세요.");
                 form.title.focus();
                 return;
             }
 
-            if(form.author.value.length === 0) {
+            if (form.author.value.length === 0) {
                 toastWarning("저자 이름을 입력해주세요.");
                 form.author.focus();
                 return;

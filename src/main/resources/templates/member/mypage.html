@@ -1,1 +1,21 @@
-회원 정보
+<html layout:decorate="~{layout.html}">
+
+<head>
+    <title>마이 페이지 | SYR Library</title>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+    <div class="flex flex-col max-w-2xl">
+        <p th:text="|${member.getUsername()} 님|"></p>
+        <p th:text="|이메일 주소 : ${member.getEmail()}|"></p>
+        <p th:text="|휴대폰 번호 : ${member.getPhoneNumber()}|"></p>
+        <a href="|/member/modify/${member.getId()}|" class="btn btn-primary w-96 mt-12">회원 정보 수정</a>
+        <a href="|/member/delete/${member.getId()}|" class="btn btn-ghost w-96 mt-12">회원 탈퇴</a>
+    </div>
+</main>
+
+</body>
+
+</html>

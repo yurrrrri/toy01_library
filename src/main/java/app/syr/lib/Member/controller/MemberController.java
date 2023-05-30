@@ -14,12 +14,10 @@ import lombok.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
@@ -32,6 +30,7 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/signup")
+    @Operation(summary = "회원가입")
     public String signup() {
         return "/member/signup";
     }
@@ -73,6 +72,7 @@ public class MemberController {
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/login")
+    @Operation(summary = "로그인")
     public String login() {
         return "/member/login";
     }
@@ -80,8 +80,23 @@ public class MemberController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/mypage")
     @Operation(summary = "마이페이지")
-    public String showMypage() {
+    public String showMypage(Model model) {
+        Member member = rq.getMember();
+        model.addAttribute("member", member);
         return "/member/mypage";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/modify/{id}")
+    @Operation(summary = "회원 정보 수정")
+    public String modify(@PathVariable Long id) {
+        Member member = memberService.findByIdAndDeleteDateIsNull(id);
+
+        if (member == null) {
+            return rq.historyBack("존재하지 않는 회원입니다.");
+        }
+
+        return "member/modify";
     }
 
     @Getter
@@ -105,22 +120,10 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modify/{id}")
-    public String modify(@PathVariable Long id) {
-        Member member = memberService.findById(id);
-
-        if (member == null) {
-            return rq.historyBack("존재하지 않는 회원입니다.");
-        }
-
-        return "member/modify";
-    }
-
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
     @Operation(summary = "회원 정보 수정")
     public String modify(@PathVariable Long id, @Valid MemberModifyForm form) {
-        Member member = memberService.findById(id);
+        Member member = memberService.findByIdAndDeleteDateIsNull(id);
 
         if (!member.getUsername().equals(rq.getMember().getUsername())) {
             return rq.historyBack("수정 권한이 없습니다.");
@@ -135,7 +138,7 @@ public class MemberController {
     @GetMapping("/delete/{id}")
     @Operation(summary = "회원 삭제 - soft")
     public String delete(@PathVariable Long id) {
-        Member member = memberService.findById(id);
+        Member member = memberService.findByIdAndDeleteDateIsNull(id);
 
         if (member == null) {
             return rq.historyBack("존재하지 않는 회원입니다.");

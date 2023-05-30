@@ -19,6 +19,30 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public Member findById(Long id) {
+        Optional<Member> member = memberRepository.findById(id);
+
+        if (member.isEmpty()) return null;
+
+        return member.get();
+    }
+
+    public Member findByUsername(String username) {
+        Optional<Member> member = memberRepository.findByUsername(username);
+
+        if (member.isEmpty()) return null;
+
+        return member.get();
+    }
+
+    public Member findByIdAndDeleteDateIsNull(Long id) {
+        Optional<Member> member = memberRepository.findByIdAndDeleteDateIsNull(id);
+
+        if (member.isEmpty()) return null;
+
+        return member.get();
+    }
+
     public RsData<Member> create(String username, String password1, String password2, String email, String phoneNumber) {
         RsData rs = canBorrow(username, password1, password2);
 
@@ -46,22 +70,6 @@ public class MemberService {
         }
 
         return RsData.of("S-1", "회원가입이 가능합니다.");
-    }
-
-    public Member findById(Long id) {
-        Optional<Member> member = memberRepository.findById(id);
-
-        if (member.isEmpty()) return null;
-
-        return member.get();
-    }
-
-    public Member findByUsername(String username) {
-        Optional<Member> member = memberRepository.findByUsername(username);
-
-        if (member.isEmpty()) return null;
-
-        return member.get();
     }
 
     public List<Member> findAll() {
