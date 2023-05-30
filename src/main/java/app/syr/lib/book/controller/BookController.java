@@ -77,6 +77,9 @@ public class BookController {
     public String modify(@Valid BookForm form, @PathVariable Long id) {
         Book book = bookService.findById(id);
         RsData rs = bookService.modify(book, form.getTitle(), form.getAuthor(), form.getCategory());
+
+        if (rs.isFail()) return rq.historyBack(rs.getMsg());
+
         return rq.redirectWithMsg("/book/list", rs.getMsg());
     }
 

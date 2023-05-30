@@ -33,8 +33,20 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public Book findByTitleAndAuthor(String title, String author) {
+        Optional<Book> book = bookRepository.findByTitleAndAuthor(title, author);
+
+        if (book.isEmpty()) return null;
+
+        return book.get();
+    }
+
     public RsData<Book> create(String title, String author, String category) {
         Category category1 = categoryService.findByName(category);
+
+        if (findByTitleAndAuthor(title, author) != null) {
+            return RsData.of("F-1", "이미 존재하는 도서입니다.");
+        }
 
         Book book = Book
                 .builder()
@@ -49,6 +61,10 @@ public class BookService {
 
     public RsData<Book> modify(Book book, String title, String author, String category) {
         Category category1 = categoryService.findByName(category);
+
+        if (book.getTitle().equals(title) && book.getAuthor().equals(author)) {
+            return RsData.of("F-1", "변경 사항이 없습니다.");
+        }
 
         Book book1 = book
                 .toBuilder()

@@ -22,7 +22,8 @@
                         <div class="card-actions justify-end">
                             <a th:if="${!@rq.isAdmin()}" onclick="document.getElementById('borrow').submit();"
                                class="btn btn-primary">대출</a>
-                            <form id="borrow" th:action="@{/loan/borrow/{id}(id=${book.getId()})}" method="post" hidden></form>
+                            <form id="borrow" th:action="@{/loan/borrow/{id}(id=${book.getId()})}" method="post"
+                                  hidden></form>
                             <a th:href="@{/book/modify/{id}(id=${book.getId()})}" th:if="${@rq.isAdmin()}"
                                class="btn btn-primary">수정</a>
                             <a th:href="@{/book/delete/{id}(id=${book.getId()})}" th:if="${@rq.isAdmin()}"
