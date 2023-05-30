@@ -1,3 +1,4 @@
+<!--suppress JSDeprecatedSymbols -->
 <html layout:decorate="~{layout.html}">
 
 <head>
@@ -19,8 +20,9 @@
                         <h2 class="card-title" th:text="${book.getTitle()}"></h2>
                         <h3 th:text="${book.getAuthor()}"></h3>
                         <div class="card-actions justify-end">
-                            <a th:href="@{/loan/borrow/{id}(id=${book.getId()})}" th:if="${!@rq.isAdmin()}"
+                            <a th:if="${!@rq.isAdmin()}" onclick="document.getElementById('borrow').submit();"
                                class="btn btn-primary">대출</a>
+                            <form id="borrow" th:action="@{/loan/borrow/{id}(id=${book.getId()})}" method="post" hidden></form>
                             <a th:href="@{/book/modify/{id}(id=${book.getId()})}" th:if="${@rq.isAdmin()}"
                                class="btn btn-primary">수정</a>
                             <a th:href="@{/book/delete/{id}(id=${book.getId()})}" th:if="${@rq.isAdmin()}"
