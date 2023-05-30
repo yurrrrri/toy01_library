@@ -31,9 +31,9 @@ public class LoanController {
     @GetMapping("/list")
     public String showList(Model model) {
         Member member = rq.getMember();
-        List<Loan> loanList = member.getLoanList();
+        List<Loan> loans = member.getLoanList();
 
-        model.addAttribute("loanList", loanList);
+        model.addAttribute("loans", loans);
         return "/loan/list";
     }
 

@@ -12,20 +12,17 @@
             <span>등록된 도서가 없습니다.</span>
         </div>
 
-        <ul class="flex flex-wrap" th:if="${!#lists.isEmpty(books)}">
+        <ul th:if="${!#lists.isEmpty(books)}">
             <li th:each="book: ${books}">
-                <div class="card w-96 bg-base-100 shadow-xl m-10">
+                <div class="card w-96 bg-base-100 shadow-xl">
                     <div class="card-body">
+                        <h2 class="card-title" th:text="${book.getTitle()}"></h2>
+                        <h3 th:text="${book.getAuthor()}"></h3>
                         <div class="card-actions justify-end">
-                            <p th:text="${book.getTitle()}"></p>
-                            <a href="|/book/modify/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-xs">
-                                수정
-                            </a>
-                            <a href="|/book/delete/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-xs">
-                                삭제
-                            </a>
+                            <a href="|/loan/borrow/${book.getId()}|" class="btn btn-primary">대출</a>
+                            <a href="|/book/modify/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-primary">수정</a>
+                            <a href="|/book/delete/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-primary">삭제</a>
                         </div>
-                        <p th:text="${book.getAuthor()}"></p>
                     </div>
                 </div>
             </li>
