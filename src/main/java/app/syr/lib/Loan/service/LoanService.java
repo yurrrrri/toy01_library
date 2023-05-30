@@ -45,7 +45,9 @@ public class LoanService {
     }
 
     public RsData<Loan> borrow(Member member, Book book) {
-        if (book.isOnLoan()) return RsData.of("F-1", "이미 대출 중인 도서입니다.");
+        if(member.isCannotUse()) return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
+
+        if (book.isOnLoan()) return RsData.of("F-2", "이미 대출 중인 도서입니다.");
 
         Loan loan = Loan
                 .builder()
@@ -61,7 +63,7 @@ public class LoanService {
     }
 
     public RsData<Loan> extend(Loan loan) {
-        if (loan.isOverdue()) return RsData.of("F-1", "반납 기한이 지난 도서입니다.");
+        if (loan.isOverdue()) return RsData.of("F-2", "반납 기한이 지난 도서입니다.");
 
         LocalDateTime now = LocalDateTime.now();
         Loan loan1 = loan

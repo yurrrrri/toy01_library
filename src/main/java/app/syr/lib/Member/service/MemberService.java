@@ -122,6 +122,9 @@ public class MemberService {
     public void whenAfterReturn(Loan loan) {
         Member member = loan.getMember();
         List<Loan> listAfterReturn = member.getLoanList();
+
+        if(loan.isOverdue()) member.setTimeout();
+
         listAfterReturn.remove(loan);
 
         Member member1 = member
