@@ -7,8 +7,18 @@
 <body>
 
 <main layout:fragment="main">
-    <div class="flex flex-col max-w-2xl">
+    <div class="flex flex-col max-w-2xl" th:if="${!@rq.isAdmin()}">
         <h1>SYR 도서관에 오신 것을 환영합니다!</h1>
+    </div>
+    <div class="flex flex-col max-w-2xl" th:if="${@rq.isAdmin()}">
+        <a href="/adm/members" class="btn btn-primary w-96 mt-12">전체 회원 목록</a>
+        <a href="/adm/loans" class="btn btn-primary w-96 mt-12">전체 대출 기록</a>
+
+        <a href="/book/list" class="btn btn-primary w-96 mt-12">도서 목록</a>
+        <a href="/book/create" class="btn btn-primary w-96 mt-12">도서 등록</a>
+
+        <a href="/category/list" class="btn btn-primary w-96 mt-12">카테고리 목록</a>
+        <a href="/category/create" class="btn btn-primary w-96 mt-12">카테고리 생성</a>
     </div>
 </main>
 

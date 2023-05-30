@@ -26,11 +26,6 @@ public class AdmController {
     private final LoanService loanService;
     private final Rq rq;
 
-    @GetMapping("/main")
-    public String showAdmMain() {
-        return "/adm/main";
-    }
-
     @GetMapping("/members")
     public String showMembers(Model model) {
         List<Member> members = memberService.findAll();
