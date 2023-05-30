@@ -18,9 +18,9 @@
                     <div class="card-body">
                         <div class="card-actions justify-end">
                             <p th:text="${book.getTitle()}"></p>
-                            <button class="btn btn-square btn-xs">
-                                <i class="fa-solid fa-x"></i>
-                            </button>
+                            <a href="|/book/modify/${book.getId()}|" class="btn btn-square btn-xs">
+                                수정
+                            </a>
                         </div>
                         <p th:text="${book.getAuthor()}"></p>
                     </div>
