@@ -1,1 +1,39 @@
-전체 회원 목록
+<html layout:decorate="~{layout.html}">
+
+<head>
+    <title>전체 회원 목록 | SYR 도서관</title>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+    <div class="flex flex-col max-w-2xl">
+        <div class="overflow-x-auto">
+            <table class="table w-full">
+                <div class="alert shadow-lg w-96" th:if="${#lists.isEmpty(members)}">
+                    <span>회원이 없습니다.</span>
+                </div>
+                <thead th:if="${!#lists.isEmpty(members)}">
+                <tr th:each="member: ${members}">
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr >
+                <tr th:text="${member.getId()}"></tr>
+                <td th:text="${member.getUsername()}"></td>
+                <td th:text="${member.getEmail()}"></td>
+                <td th:text="${member.getPhoneNumber()}"></td>
+                </tr >
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>

@@ -1,1 +1,39 @@
-전체 대출 기록
+<html layout:decorate="~{layout.html}">
+
+<head>
+    <title>전체 대출 기록 | SYR 도서관</title>
+</head>
+
+<body>
+
+<main layout:fragment="main">
+    <div class="flex flex-col max-w-2xl">
+        <div class="overflow-x-auto">
+            <table class="table w-full">
+                <div class="alert shadow-lg w-96" th:if="${#lists.isEmpty(loans)}">
+                    <span>대출 기록이 없습니다.</span>
+                </div>
+                <thead th:if="${!#lists.isEmpty(loans)}">
+                <tr th:each="loan: ${loans}">
+                    <th>Id</th>
+                    <th>Member Id</th>
+                    <th>Book Title</th>
+                    <th>Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr >
+                    <tr th:text="${loan.getId()}"></tr>
+                    <td th:text="${loan.getMember().getId()}"></td>
+                    <td th:text="${loan.getBook().getTitle()}"></td>
+                    <td th:text="${loan.getCreateDate()}"></td>
+                </tr >
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+</body>
+
+</html>
