@@ -50,6 +50,7 @@ public class Rq {
     }
 
     public boolean isAdmin() {
+        if (getMember() == null) return false;
         return getMember().getUsername().equals("ADMIN");
     }
 

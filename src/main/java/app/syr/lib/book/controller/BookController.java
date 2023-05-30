@@ -33,7 +33,7 @@ public class BookController {
     @GetMapping("/list")
     public String showList(Model model) {
         List<Book> books = bookService.findAll();
-        model.addAttribute(books);
+        model.addAttribute("books", books);
         return "book/list";
     }
 

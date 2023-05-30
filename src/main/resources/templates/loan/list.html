@@ -28,7 +28,7 @@
                 <td th:text="${loan.getBook().getTitle()}"></td>
                 <td th:text="${loan.getBook().getAuthor()}"></td>
                 <td th:text="${loan.getCreateDate()}"></td>
-                <td><a class="btn btn-sm" href="|/loan/return/${loan.getId()}|">반납하기</a></td>
+                <td><a class="btn btn-sm" th:href="@{/loan/return/{id}(id=${loan.getId()})}">반납하기</a></td>
                 </tr >
                 </tbody>
             </table>
