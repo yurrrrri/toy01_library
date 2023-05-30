@@ -20,8 +20,10 @@
                         <h3 th:text="${book.getAuthor()}"></h3>
                         <div class="card-actions justify-end">
                             <a href="|/loan/borrow/${book.getId()}|" class="btn btn-primary">대출</a>
-                            <a href="|/book/modify/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-primary">수정</a>
-                            <a href="|/book/delete/${book.getId()}|" th:if="${@rq.isAdmin()}" class="btn btn-primary">삭제</a>
+                            <a href="|/book/modify/${book.getId()}|" th:if="${@rq.isAdmin()}"
+                               class="btn btn-primary">수정</a>
+                            <a href="|/book/delete/${book.getId()}|" th:if="${@rq.isAdmin()}"
+                               class="btn btn-primary">삭제</a>
                         </div>
                     </div>
                 </div>

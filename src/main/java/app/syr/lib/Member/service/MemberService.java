@@ -107,6 +107,17 @@ public class MemberService {
         return RsData.of("S-1", "%s 회원이 삭제되었습니다.".formatted(username));
     }
 
+    public void whenBeforeLoan(Member member) {
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isAfter(member.getTimeout())) {
+            Member member1 = member
+                    .toBuilder()
+                    .cannotUse(false)
+                    .build();
+            memberRepository.save(member1);
+        }
+    }
+
     public void whenAfterLoan(Loan loan) {
         Member member = loan.getMember();
         List<Loan> listAfterAdd = member.getLoanList();
@@ -123,7 +134,10 @@ public class MemberService {
         Member member = loan.getMember();
         List<Loan> listAfterReturn = member.getLoanList();
 
-        if(loan.isOverdue()) member.setTimeout();
+        if (loan.isOverdue()) {
+            member.setTimeout();
+            member.setCannotUse(true);
+        }
 
         listAfterReturn.remove(loan);
 

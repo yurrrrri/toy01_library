@@ -5,6 +5,7 @@ import app.syr.lib.Loan.repository.LoanRepository;
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.base.event.EventAfterLoan;
 import app.syr.lib.base.event.EventAfterReturn;
+import app.syr.lib.base.event.EventBeforeLoan;
 import app.syr.lib.base.rq.Rq;
 import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.book.entity.Book;
@@ -45,7 +46,9 @@ public class LoanService {
     }
 
     public RsData<Loan> borrow(Member member, Book book) {
-        if(member.isCannotUse()) return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
+        publisher.publishEvent(new EventBeforeLoan(this, member));
+
+        if (member.isCannotUse()) return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
 
         if (book.isOnLoan()) return RsData.of("F-2", "이미 대출 중인 도서입니다.");
 
