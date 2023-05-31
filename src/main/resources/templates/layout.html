@@ -47,6 +47,9 @@
         <a href="/book/list" th:if="${@rq.login}" class="btn btn-ghost btn-circle">
             <i class="fa-solid fa-book"></i>
         </a>
+        <a href="/member/mypage" th:if="${@rq.login}" class="btn btn-ghost btn-circle">
+            <i class="fa-solid fa-user"></i>
+        </a>
         <a href="/member/login" th:if="${@rq.logout}" class="btn btn-ghost">
             로그인
         </a>

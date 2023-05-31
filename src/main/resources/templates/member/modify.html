@@ -29,9 +29,7 @@
                 form.email.focus();
                 return;
             }
-
-            const regex2 = /^\d{3}-\d{3,4}-\d{4}$/;
-            if (!regex2.test(form.phoneNumber.value.trim())) {
+            if (form.phoneNumber.value.trim().length === 0) {
                 toastWarning("휴대폰 번호를 정확히 입력해주세요.");
                 form.phoneNumber.focus();
                 return;

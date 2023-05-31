@@ -67,7 +67,7 @@ public class MemberController {
 
         if (rs.isFail()) return rq.historyBack(rs.getMsg());
 
-        return rq.redirectWithMsg("/member/login", rs.getMsg());
+        return rq.redirectWithMsg("login", rs.getMsg());
     }
 
     @PreAuthorize("isAnonymous()")
@@ -87,15 +87,10 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/modify/{id}")
+    @GetMapping("/modify")
     @Operation(summary = "회원 정보 수정")
-    public String modify(@PathVariable Long id, Model model) {
-        Member member = memberService.findByIdAndDeleteDateIsNull(id);
-
-        if (member == null) {
-            return rq.historyBack("존재하지 않는 회원입니다.");
-        }
-
+    public String modify(Model model) {
+        Member member = rq.getMember();
         model.addAttribute("member", member);
         return "member/modify";
     }
@@ -121,40 +116,22 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/modify/{id}")
+    @PostMapping("/modify")
     @Operation(summary = "회원 정보 수정")
-    public String modify(@PathVariable Long id, @Valid MemberModifyForm form) {
-        Member member = memberService.findByIdAndDeleteDateIsNull(id);
-
-        if (member == null) {
-            return rq.historyBack("존재하지 않는 회원입니다.");
-        }
-
-        if (!member.getUsername().equals(rq.getMember().getUsername())) {
-            return rq.historyBack("수정 권한이 없습니다.");
-        }
-
+    public String modify(@Valid MemberModifyForm form) {
+        Member member = rq.getMember();
         RsData<Member> rs = memberService.modify(member, form.getPassword1(), form.getEmail(), form.getPhoneNumber());
-        return rq.redirectWithMsg("member/mypage", rs.getMsg());
+        return rq.redirectWithMsg("mypage", rs.getMsg());
     }
 
     // soft-delete
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/delete/{id}")
-    @Operation(summary = "회원 삭제 - soft")
-    public String delete(@PathVariable Long id) {
-        Member member = memberService.findByIdAndDeleteDateIsNull(id);
-
-        if (member == null) {
-            return rq.historyBack("존재하지 않는 회원입니다.");
-        }
-
-        if (!member.getUsername().equals(rq.getMember().getUsername())) {
-            return rq.historyBack("삭제 권한이 없습니다.");
-        }
-
+    @GetMapping("/delete")
+    @Operation(summary = "회원 탈퇴 (soft-delete 구현)")
+    public String delete() {
+        Member member = rq.getMember();
         RsData rs = memberService.delete(member);
-        return rq.redirectWithMsg("member/logout", rs.getMsg());
+        return "redirect:/logout";
     }
 
 }

@@ -11,8 +11,8 @@
         <p th:text="|${member.getUsername()} 님|"></p>
         <p th:text="|이메일 주소 : ${member.getEmail()}|"></p>
         <p th:text="|휴대폰 번호 : ${member.getPhoneNumber()}|"></p>
-        <a href="|/member/modify/${member.getId()}|" class="btn btn-primary w-96 mt-12">회원 정보 수정</a>
-        <a href="|/member/delete/${member.getId()}|" class="btn btn-ghost w-96 mt-12">회원 탈퇴</a>
+        <a href="/member/modify" class="btn btn-primary w-96 mt-12">회원 정보 수정</a>
+        <a href="/member/delete" class="btn btn-ghost w-96 mt-12">회원 탈퇴</a>
     </div>
 </main>
 
