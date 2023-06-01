@@ -5,13 +5,16 @@ import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.repository.MemberRepository;
 import app.syr.lib.base.rsData.RsData;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -109,12 +112,8 @@ public class MemberService {
 
     public void whenBeforeLoan(Member member) {
         LocalDateTime now = LocalDateTime.now();
-        if (now.isAfter(member.getTimeout())) {
-            Member member1 = member
-                    .toBuilder()
-                    .cannotUse(false)
-                    .build();
-            memberRepository.save(member1);
+        if (member.getTimeout() == null || now.isAfter(member.getTimeout())) {
+            member.setCannotUse(false);
         }
     }
 
@@ -123,11 +122,7 @@ public class MemberService {
         List<Loan> listAfterAdd = member.getLoanList();
         listAfterAdd.add(loan);
 
-        Member member1 = member
-                .toBuilder()
-                .loanList(listAfterAdd)
-                .build();
-        memberRepository.save(member1);
+        member.setLoanList(listAfterAdd);
     }
 
     public void whenAfterReturn(Loan loan) {
@@ -141,10 +136,6 @@ public class MemberService {
 
         listAfterReturn.remove(loan);
 
-        Member member1 = member
-                .toBuilder()
-                .loanList(listAfterReturn)
-                .build();
-        memberRepository.save(member1);
+        member.setLoanList(listAfterReturn);
     }
 }

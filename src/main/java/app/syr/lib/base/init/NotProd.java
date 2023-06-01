@@ -2,6 +2,8 @@ package app.syr.lib.base.init;
 
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.service.MemberService;
+import app.syr.lib.book.entity.Book;
+import app.syr.lib.book.service.BookService;
 import app.syr.lib.category.entity.Category;
 import app.syr.lib.category.service.CategoryService;
 import org.springframework.boot.CommandLineRunner;
@@ -14,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Profile({"dev", "test"})
 public class NotProd {
     @Bean
-    CommandLineRunner initData(MemberService memberService, CategoryService categoryService) {
+    CommandLineRunner initData(MemberService memberService, CategoryService categoryService, BookService bookService) {
 
         return new CommandLineRunner() {
 
@@ -36,6 +38,10 @@ public class NotProd {
                 Category category700 = categoryService.create("700 언어").getData();
                 Category category800 = categoryService.create("800 문학").getData();
                 Category category900 = categoryService.create("900 역사").getData();
+
+                Book book1 = bookService.create("테스트1", "test", category000.getName()).getData();
+                Book book2 = bookService.create("테스트2", "test", category000.getName()).getData();
+                Book book3 = bookService.create("테스트3", "test", category000.getName()).getData();
             }
         };
     }

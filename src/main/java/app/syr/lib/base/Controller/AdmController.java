@@ -30,14 +30,14 @@ public class AdmController {
     public String showMembers(Model model) {
         List<Member> members = memberService.findAll();
         model.addAttribute("members", members);
-        return "/adm/members";
+        return "adm/members";
     }
 
     @GetMapping("/loans")
     public String showLoans(Model model) {
         List<Loan> loans = loanService.findAll();
         model.addAttribute("loans", loans);
-        return "/adm/loans";
+        return "adm/loans";
     }
 
     // 회원 삭제

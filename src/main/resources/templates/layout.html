@@ -27,10 +27,16 @@
                 <li th:if="${@rq.logout}">
                     <a href="/member/login">로그인</a>
                 </li>
-                <li th:if="${@rq.login}">
+                <li th:if="${!@rq.isAdmin()}">
                     <a href="/book/list">
                         <i class="fa-solid fa-book"></i>
-                        <span>나의 대출 목록</span>
+                        <span th:if="${!@rq.isAdmin()}">도서 목록</span>
+                    </a>
+                </li>
+                <li th:if="${!@rq.isAdmin()}">
+                    <a href="/loan/list">
+                        <i class="fa-solid fa-book"></i>
+                        <span th:if="${!@rq.isAdmin()}">나의 대출 목록</span>
                     </a>
                 </li>
                 <li th:if="${@rq.login}">
@@ -44,7 +50,7 @@
         <a href="/" class="btn btn-ghost normal-case">SYR Library</a>
     </div>
     <div class="navbar-end pr-4">
-        <a href="/book/list" th:if="${@rq.login}" class="btn btn-ghost btn-circle">
+        <a href="/loan/list" th:if="${!@rq.isAdmin()}" class="btn btn-ghost btn-circle">
             <i class="fa-solid fa-book"></i>
         </a>
         <a href="/member/mypage" th:if="${@rq.login}" class="btn btn-ghost btn-circle">

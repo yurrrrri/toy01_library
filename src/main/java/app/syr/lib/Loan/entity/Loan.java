@@ -30,6 +30,9 @@ public class Loan extends BaseEntity {
 
     public boolean isOverdue() {
         LocalDateTime now = LocalDateTime.now();
+
+        if(deadline == null) return false;
+
         return now.isAfter(deadline);
     }
 

@@ -34,12 +34,12 @@ public class LoanController {
         List<Loan> loans = member.getLoanList();
 
         model.addAttribute("loans", loans);
-        return "/loan/list";
+        return "loan/list";
     }
 
     @PostMapping("/borrow/{id}")
-    public String borrow(@PathVariable Long bookId) {
-        Book book = bookService.findById(bookId);
+    public String borrow(@PathVariable Long id) {
+        Book book = bookService.findById(id);
 
         if (book == null) return rq.historyBack("존재하지 않는 도서입니다.");
 
@@ -51,8 +51,8 @@ public class LoanController {
     }
 
     @PostMapping("/return/{id}")
-    public String returnBook(@PathVariable Long bookId) {
-        Loan loan = loanService.findByBook_Id(bookId);
+    public String returnBook(@PathVariable Long id) {
+        Loan loan = loanService.findByBook_Id(id);
 
         if (loan == null) return rq.historyBack("존재하지 않는 대출 기록입니다.");
 

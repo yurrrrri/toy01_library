@@ -6,10 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,6 +42,10 @@ public class Member extends BaseEntity {
 
     public void setCannotUse(Boolean flag) {
         cannotUse = flag;
+    }
+
+    public void setLoanList(List<Loan> list){
+        this.loanList = list;
     }
 
     public void setTimeout() {

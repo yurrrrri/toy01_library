@@ -26,7 +26,7 @@
     </script>
 
     <div class="flex flex-col max-w-2xl min-w-full">
-        <form th:action="@{/book/modify}" method="post" onsubmit="Validation__book(this); return false;">
+        <form th:action="@{/book/modify/{id}(id=${book.getId()})}" method="post" onsubmit="Validation__book(this); return false;">
             <p th:text="|기존 제목 : ${book.getTitle()}|" class="mt-12"></p>
             <div class="input input-bordered mt-2 form-control">
                 <input type="text" placeholder="도서 제목" name="title" id="title">

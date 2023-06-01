@@ -12,7 +12,7 @@
             <div class="alert shadow-lg w-96" th:if="${#lists.isEmpty(loans)}">
                 <span>대출 기록이 없습니다.</span>
             </div>
-            <table class="table w-full" th:if="${!#lists.isEmpty(loans)}">
+            <table class="table w-full" th:if="${!#lists.isEmpty(loans)}" th:each="loan: ${loans}">
                 <thead>
                 <tr>
                     <th>Id</th>
@@ -22,8 +22,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="loan: ${loans}">
-                <tr th:text="${loan.getId()}"></tr>
+                <tr>
+                <td th:text="${loan.getId()}"></td>
                 <td th:text="${loan.getMember().getId()}"></td>
                 <td th:text="${loan.getBook().getTitle()}"></td>
                 <td th:text="${loan.getCreateDate()}"></td>
