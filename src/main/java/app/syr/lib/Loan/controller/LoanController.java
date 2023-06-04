@@ -7,6 +7,8 @@ import app.syr.lib.base.rq.Rq;
 import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("isAuthenticated()")
 @RequestMapping("/loan")
+@Tag(name = "도서 대출", description = "회원 대출 리스트, 도서 대출, 반납")
 public class LoanController {
 
     private final LoanService loanService;
@@ -26,6 +29,7 @@ public class LoanController {
     private final Rq rq;
 
     @GetMapping("/list")
+    @Operation(summary = "회원 대출 리스트")
     public String showList(Model model) {
         Member member = rq.getMember();
         List<Loan> loans = loanService.findByMemberAndDeleteDateIsNull(member);
@@ -35,6 +39,7 @@ public class LoanController {
     }
 
     @PostMapping("/borrow")
+    @Operation(summary = "도서 대출")
     public String borrow(@RequestParam Long bookId) {
         Book book = bookService.findById(bookId);
 
@@ -48,6 +53,7 @@ public class LoanController {
     }
 
     @PostMapping("/return/{id}")
+    @Operation(summary = "도서 반납")
     public String returnBook(@PathVariable Long id) {
         Loan loan = loanService.findById(id);
 

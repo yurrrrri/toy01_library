@@ -2,6 +2,8 @@ package app.syr.lib.base.Controller;
 
 import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +18,13 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@Tag(name = "메인", description = "메인, 로그아웃")
 public class HomeController {
 
     private final BookService bookService;
 
     @GetMapping("/")
+    @Operation(summary = "메인")
     public String main(Model model) {
         List<Book> books = bookService.findAll();
         model.addAttribute("books", books);
@@ -29,6 +33,7 @@ public class HomeController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/logout")
+    @Operation(summary = "로그아웃")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
         new SecurityContextLogoutHandler()

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/member")
-@Tag(name = "MemberController", description = "로그인, 회원가입 등")
+@Tag(name = "회원", description = "로그인, 회원가입 등")
 public class MemberController {
 
     private final MemberService memberService;

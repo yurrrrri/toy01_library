@@ -6,6 +6,8 @@ import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.service.MemberService;
 import app.syr.lib.base.rq.Rq;
 import app.syr.lib.base.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/adm")
+@Tag(name = "관리자 메인", description = "회원 목록, 대출 현황, 회원 정보 삭제")
 public class AdmController {
 
     private final MemberService memberService;
@@ -27,6 +30,7 @@ public class AdmController {
     private final Rq rq;
 
     @GetMapping("/members")
+    @Operation(summary = "전체 회원 목록")
     public String showMembers(Model model) {
         List<Member> members = memberService.findAll();
         model.addAttribute("members", members);
@@ -34,6 +38,7 @@ public class AdmController {
     }
 
     @GetMapping("/loans")
+    @Operation(summary = "대출 현황")
     public String showLoans(Model model) {
         List<Loan> loans = loanService.findAll();
         model.addAttribute("loans", loans);
@@ -42,6 +47,7 @@ public class AdmController {
 
     // 회원 삭제
     @GetMapping("/members/delete/{id}")
+    @Operation(summary = "회원 정보 삭제")
     public String deleteMember(@PathVariable Long id) {
         Member member = memberService.findById(id);
 
