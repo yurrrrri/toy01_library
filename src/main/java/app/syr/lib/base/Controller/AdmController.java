@@ -45,7 +45,6 @@ public class AdmController {
         return "adm/loans";
     }
 
-    // 회원 삭제
     @GetMapping("/members/delete/{id}")
     @Operation(summary = "회원 정보 삭제")
     public String deleteMember(@PathVariable Long id) {

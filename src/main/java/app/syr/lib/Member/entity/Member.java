@@ -1,12 +1,12 @@
 package app.syr.lib.Member.entity;
 
-import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.base.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

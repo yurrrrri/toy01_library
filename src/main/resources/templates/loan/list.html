@@ -24,15 +24,16 @@
                 </thead>
                 <tbody th:each="loan: ${loans}">
                 <tr>
-                <td th:text="${loan.getId()}"></td>
-                <td th:text="${loan.getBook().getTitle()}"></td>
-                <td th:text="${loan.getBook().getAuthor()}"></td>
-                <td th:text="${loan.getCreateDate()}"></td>
-                <td>
-                    <a href="javascript:" class="btn btn-sm" onclick="$(this).next().submit();">반납</a>
-                    <form id="return" th:action="@{/loan/return/{id}(id=${loan.getId()})}" method="post" hidden></form>
-                </td>
-                </tr >
+                    <td th:text="${loan.getId()}"></td>
+                    <td th:text="${loan.getBook().getTitle()}"></td>
+                    <td th:text="${loan.getBook().getAuthor()}"></td>
+                    <td th:text="${loan.getCreateDate()}"></td>
+                    <td>
+                        <a href="javascript:" class="btn btn-sm" onclick="$(this).next().submit();">반납</a>
+                        <form id="return" th:action="@{/loan/return/{id}(id=${loan.getId()})}" method="post"
+                              hidden></form>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>

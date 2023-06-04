@@ -1,8 +1,6 @@
 package app.syr.lib.Member.eventListener;
 
 import app.syr.lib.Member.service.MemberService;
-import app.syr.lib.base.event.EventAfterLoan;
-import app.syr.lib.base.event.EventAfterReturn;
 import app.syr.lib.base.event.EventBeforeLoan;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;

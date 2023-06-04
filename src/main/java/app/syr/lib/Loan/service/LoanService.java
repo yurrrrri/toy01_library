@@ -34,7 +34,7 @@ public class LoanService {
     }
 
     public List<Loan> findByMemberAndDeleteDateIsNull(Member member) {
-         return loanRepository.findByMemberAndDeleteDateIsNull(member);
+        return loanRepository.findByMemberAndDeleteDateIsNull(member);
     }
 
     public List<Loan> findAll() {

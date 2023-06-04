@@ -1,6 +1,5 @@
 package app.syr.lib.Member.service;
 
-import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.repository.MemberRepository;
 import app.syr.lib.base.rsData.RsData;
@@ -10,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -115,7 +113,7 @@ public class MemberService {
         if (member.getTimeout() == null) {
             member.setCannotUse(false);
         } else {
-            if(now.isAfter(member.getTimeout())) {
+            if (now.isAfter(member.getTimeout())) {
                 member.setCannotUse(false);
             }
         }
