@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,19 +28,19 @@ public class LoanController {
     @GetMapping("/list")
     public String showList(Model model) {
         Member member = rq.getMember();
-        List<Loan> loans = member.getLoanList();
+        List<Loan> loans = loanService.findByMemberAndDeleteDateIsNull(member);
 
         model.addAttribute("loans", loans);
         return "loan/list";
     }
 
-    @PostMapping("/borrow/{id}")
-    public String borrow(@PathVariable Long id) {
-        Book book = bookService.findById(id);
+    @PostMapping("/borrow")
+    public String borrow(@RequestParam Long bookId) {
+        Book book = bookService.findById(bookId);
 
         if (book == null) return rq.historyBack("존재하지 않는 도서입니다.");
 
-        RsData<Loan> rs = loanService.borrow(rq.getMember(), book);
+        RsData<Loan> rs = loanService.borrow(book);
 
         if (rs.isFail()) return rq.historyBack(rs.getMsg());
 
@@ -52,7 +49,7 @@ public class LoanController {
 
     @PostMapping("/return/{id}")
     public String returnBook(@PathVariable Long id) {
-        Loan loan = loanService.findByBook_Id(id);
+        Loan loan = loanService.findById(id);
 
         if (loan == null) return rq.historyBack("존재하지 않는 대출 기록입니다.");
 

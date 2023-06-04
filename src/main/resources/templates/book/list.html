@@ -15,15 +15,16 @@
 
         <ul th:if="${!#lists.isEmpty(books)}">
             <li th:each="book: ${books}">
-                <div class="card w-96 bg-base-100 shadow-xl m-5">
+                <div class="card w-96 bg-base-100 shadow-xl m-5" th:if="${!book.isOnLoan()}">
                     <div class="card-body">
                         <h2 class="card-title" th:text="${book.getTitle()}"></h2>
                         <h3 th:text="${book.getAuthor()}"></h3>
                         <div class="card-actions justify-end">
-                            <a th:if="${!@rq.isAdmin()}" onclick="document.getElementById('borrow').submit();"
+                            <a onclick="document.getElementById('borrow').submit();"
                                class="btn btn-primary">대출</a>
-                            <form id="borrow" th:action="@{/loan/borrow/{id}(id=${book.getId()})}" method="post"
-                                  hidden></form>
+                            <form id="borrow" th:action="@{/loan/borrow}" method="post" hidden>
+                                <input type="text" name="bookId" th:value="${book.getId()}">
+                            </form>
                             <a th:href="@{/book/modify/{id}(id=${book.getId()})}" th:if="${@rq.isAdmin()}"
                                class="btn btn-primary">수정</a>
                             <a th:href="@{/book/delete/{id}(id=${book.getId()})}" th:if="${@rq.isAdmin()}"

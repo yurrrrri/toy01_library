@@ -50,15 +50,4 @@ public class AdmController {
         RsData rs = memberService.deleteHard(member);
         return rq.redirectWithMsg("/adm/main", rs.getMsg());
     }
-
-    // 대출 기록 삭제
-    @GetMapping("/loan/delete/{id}")
-    public String deleteLoan(@PathVariable Long id) {
-        Loan loan = loanService.findById(id);
-
-        if (loan == null) return rq.historyBack("존재하지 않는 대출 기록입니다.");
-
-        RsData rs = loanService.delete(loan);
-        return rq.redirectWithMsg("/adm/main", rs.getMsg());
-    }
 }

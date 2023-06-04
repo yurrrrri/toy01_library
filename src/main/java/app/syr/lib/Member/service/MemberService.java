@@ -47,7 +47,7 @@ public class MemberService {
     }
 
     public RsData<Member> create(String username, String password1, String password2, String email, String phoneNumber) {
-        RsData rs = canBorrow(username, password1, password2);
+        RsData rs = canCreate(username, password1, password2);
 
         if (rs.isFail()) return rs;
 
@@ -63,7 +63,7 @@ public class MemberService {
         return RsData.of("S-1", "회원가입 되었습니다.", member);
     }
 
-    private RsData canBorrow(String username, String password1, String password2) {
+    private RsData canCreate(String username, String password1, String password2) {
         if (findByUsername(username) != null) {
             return RsData.of("F-1", "이미 존재하는 아이디입니다.");
         }
@@ -112,30 +112,12 @@ public class MemberService {
 
     public void whenBeforeLoan(Member member) {
         LocalDateTime now = LocalDateTime.now();
-        if (member.getTimeout() == null || now.isAfter(member.getTimeout())) {
+        if (member.getTimeout() == null) {
             member.setCannotUse(false);
+        } else {
+            if(now.isAfter(member.getTimeout())) {
+                member.setCannotUse(false);
+            }
         }
-    }
-
-    public void whenAfterLoan(Loan loan) {
-        Member member = loan.getMember();
-        List<Loan> listAfterAdd = member.getLoanList();
-        listAfterAdd.add(loan);
-
-        member.setLoanList(listAfterAdd);
-    }
-
-    public void whenAfterReturn(Loan loan) {
-        Member member = loan.getMember();
-        List<Loan> listAfterReturn = member.getLoanList();
-
-        if (loan.isOverdue()) {
-            member.setTimeout();
-            member.setCannotUse(true);
-        }
-
-        listAfterReturn.remove(loan);
-
-        member.setLoanList(listAfterReturn);
     }
 }

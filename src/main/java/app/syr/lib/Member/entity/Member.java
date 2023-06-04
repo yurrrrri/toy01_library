@@ -32,20 +32,12 @@ public class Member extends BaseEntity {
 
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "member")
-    @Builder.Default
-    private List<Loan> loanList = new ArrayList<>();
-
     private LocalDateTime timeout; // 연체했을 때 대출 가능해지는 시간 저장
 
     private boolean cannotUse;
 
     public void setCannotUse(Boolean flag) {
         cannotUse = flag;
-    }
-
-    public void setLoanList(List<Loan> list){
-        this.loanList = list;
     }
 
     public void setTimeout() {

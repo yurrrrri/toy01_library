@@ -33,28 +33,24 @@ public class LoanService {
         return loan.get();
     }
 
-    public Loan findByBook_Id(Long bookId) {
-        Optional<Loan> loan = loanRepository.findByBook_Id(bookId);
-
-        if (loan.isEmpty()) return null;
-
-        return loan.get();
+    public List<Loan> findByMemberAndDeleteDateIsNull(Member member) {
+         return loanRepository.findByMemberAndDeleteDateIsNull(member);
     }
 
     public List<Loan> findAll() {
         return loanRepository.findAll();
     }
 
-    public RsData<Loan> borrow(Member member, Book book) {
-        publisher.publishEvent(new EventBeforeLoan(this, member));
+    public RsData<Loan> borrow(Book book) {
+        publisher.publishEvent(new EventBeforeLoan(this, rq.getMember()));
 
-        if (member.isCannotUse()) return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
+        if (rq.getMember().isCannotUse()) return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
 
         if (book.isOnLoan()) return RsData.of("F-2", "이미 대출 중인 도서입니다.");
 
         Loan loan = Loan
                 .builder()
-                .member(member)
+                .member(rq.getMember())
                 .book(book)
                 .build();
 
@@ -77,7 +73,7 @@ public class LoanService {
         return RsData.of("S-1", "반납 기한이 연장되었습니다.", loan1);
     }
 
-    // soft-delete
+    // hard-delete
     public RsData returnBook(Loan loan) {
         if (!rq.getMember().getUsername().equals(loan.getMember().getUsername())) {
             return RsData.of("F-1", "반납할 권한이 없습니다.");
@@ -89,22 +85,9 @@ public class LoanService {
 
         String title = loan.getBook().getTitle();
 
-        Loan returned = loan
-                .toBuilder()
-                .deadline(null)
-                .deleteDate(LocalDateTime.now())
-                .build();
-        loanRepository.save(returned);
+        loanRepository.delete(loan);
 
         publisher.publishEvent(new EventAfterReturn(this, loan));
         return RsData.of("S-1", "%s 도서가 반납되었습니다.".formatted(title));
-    }
-
-    // hard-delete by Loan Entity
-    public RsData delete(Loan loan) {
-        Long id = loan.getId();
-        loanRepository.delete(loan);
-
-        return RsData.of("S-1", "%d번 대출 기록이 삭제되었습니다.".formatted(id));
     }
 }

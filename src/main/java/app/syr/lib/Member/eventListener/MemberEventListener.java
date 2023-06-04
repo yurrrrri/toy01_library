@@ -21,14 +21,4 @@ public class MemberEventListener {
         memberService.whenBeforeLoan(event.getMember());
     }
 
-    @EventListener
-    public void listen(EventAfterLoan event) {
-        memberService.whenAfterLoan(event.getLoan());
-    }
-
-    @EventListener
-    public void listen(EventAfterReturn event) {
-        memberService.whenAfterReturn(event.getLoan());
-    }
-
 }
