@@ -1,5 +1,6 @@
 package app.syr.lib.Member.service;
 
+import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.repository.MemberRepository;
 import app.syr.lib.base.rsData.RsData;
@@ -116,6 +117,13 @@ public class MemberService {
             if (now.isAfter(member.getTimeout())) {
                 member.setCannotUse(false);
             }
+        }
+    }
+
+    public void whenAfterReturn(Member member, boolean isOverdue) {
+        if(isOverdue) {
+            member.setTimeout();
+            member.setCannotUse(true);
         }
     }
 }

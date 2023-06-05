@@ -1,6 +1,7 @@
 package app.syr.lib.Member.eventListener;
 
 import app.syr.lib.Member.service.MemberService;
+import app.syr.lib.base.event.EventAfterReturn;
 import app.syr.lib.base.event.EventBeforeLoan;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -17,6 +18,11 @@ public class MemberEventListener {
     @EventListener
     public void listen(EventBeforeLoan event) {
         memberService.whenBeforeLoan(event.getMember());
+    }
+
+    @EventListener
+    public void listen(EventAfterReturn event) {
+        memberService.whenAfterReturn(event.getLoan().getMember(), event.getLoan().isOverdue());
     }
 
 }

@@ -12,12 +12,14 @@ import app.syr.lib.book.entity.Book;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class LoanService {
 
@@ -67,7 +69,7 @@ public class LoanService {
         LocalDateTime now = LocalDateTime.now();
         Loan loan1 = loan
                 .toBuilder()
-                .modifyDate(now.plusDays(7))
+                .deadline(now.plusDays(7))
                 .build();
         loanRepository.save(loan1);
         return RsData.of("S-1", "반납 기한이 연장되었습니다.", loan1);
@@ -85,9 +87,9 @@ public class LoanService {
 
         String title = loan.getBook().getTitle();
 
-        loanRepository.delete(loan);
-
         publisher.publishEvent(new EventAfterReturn(this, loan));
+
+        loanRepository.delete(loan);
         return RsData.of("S-1", "%s 도서가 반납되었습니다.".formatted(title));
     }
 }
