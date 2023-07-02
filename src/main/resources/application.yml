@@ -1,4 +1,9 @@
 spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ENC(Qf3mL1mWKnu1UwwunwGC+iDGqTaqyo5nj4HRJ4KNlZ9CpHQqqmFUEeVzYSssO1zZ4MjeziU/ocHnwiFrfz205/wgLPzoCDc/+1AvB3cWoFdoKFPJ6hwZJPMe9//TwxH1CQoKjWiiN0Fqfg0HpSwq3SKXLt2MuGYJymFVIt461CMIPK+fKB5MIg==)
+    username: ENC(R6wJD1rHvG6dbDzdBliy0g==)
+    password: ENC(3ZlJSQ370GP4f9IPWhQ+YPJFn9yWHqqj)
   mvc:
     hiddenmethod:
       filter:
@@ -20,3 +25,6 @@ spring:
       app.syr.lib: DEBUG
       org.hibernate.orm.jdbc.bind: TRACE
       org.hibernate.orm.jdbc.extract: TRACE
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
