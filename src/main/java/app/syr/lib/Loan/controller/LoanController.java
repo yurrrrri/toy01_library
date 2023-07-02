@@ -2,7 +2,6 @@ package app.syr.lib.Loan.controller;
 
 import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.Loan.service.LoanService;
-import app.syr.lib.Member.entity.Member;
 import app.syr.lib.base.rq.Rq;
 import app.syr.lib.base.rsData.RsData;
 import app.syr.lib.book.entity.Book;
@@ -31,9 +30,7 @@ public class LoanController {
     @GetMapping("/list")
     @Operation(summary = "회원 대출 리스트")
     public String showList(Model model) {
-        Member member = rq.getMember();
-        List<Loan> loans = loanService.findByMemberAndDeleteDateIsNull(member);
-
+        List<Loan> loans = loanService.findByMemberAndDeleteDateIsNull(rq.getMember());
         model.addAttribute("loans", loans);
         return "loan/list";
     }

@@ -22,7 +22,7 @@ public class MemberEventListener {
 
     @EventListener
     public void listen(EventAfterReturn event) {
-        memberService.whenAfterReturn(event.getLoan().getMember(), event.getLoan().isOverdue());
+        memberService.whenAfterReturn(event.getLoan());
     }
 
 }

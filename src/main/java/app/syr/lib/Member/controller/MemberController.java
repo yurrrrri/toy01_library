@@ -10,10 +10,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,7 +34,8 @@ public class MemberController {
         return "/member/signup";
     }
 
-    @Data
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberCreateForm {
@@ -66,7 +64,7 @@ public class MemberController {
     @PostMapping("/signup")
     @Operation(summary = "회원가입")
     public String signup(@Valid MemberCreateForm form) {
-        RsData<Member> rs = memberService.create(form.getUsername(), form.getPassword1(), form.getPassword2(), form.getEmail(), form.getPhoneNumber());
+        RsData<Member> rs = memberService.create(form);
 
         if (rs.isFail()) return rq.historyBack(rs.getMsg());
 
@@ -84,8 +82,7 @@ public class MemberController {
     @GetMapping("/mypage")
     @Operation(summary = "마이페이지")
     public String showMypage(Model model) {
-        Member member = rq.getMember();
-        model.addAttribute("member", member);
+        model.addAttribute("member", rq.getMember());
         return "/member/mypage";
     }
 
@@ -93,12 +90,12 @@ public class MemberController {
     @GetMapping("/modify")
     @Operation(summary = "회원 정보 수정")
     public String modify(Model model) {
-        Member member = rq.getMember();
-        model.addAttribute("member", member);
+        model.addAttribute("member", rq.getMember());
         return "member/modify";
     }
 
-    @Data
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MemberModifyForm {
@@ -121,8 +118,7 @@ public class MemberController {
     @PostMapping("/modify")
     @Operation(summary = "회원 정보 수정")
     public String modify(@Valid MemberModifyForm form) {
-        Member member = rq.getMember();
-        RsData<Member> rs = memberService.modify(member, form.getPassword1(), form.getEmail(), form.getPhoneNumber());
+        RsData<Member> rs = memberService.modify(rq.getMember(), form);
         return rq.redirectWithMsg("mypage", rs.getMsg());
     }
 
@@ -131,9 +127,8 @@ public class MemberController {
     @GetMapping("/delete")
     @Operation(summary = "회원 탈퇴 (soft-delete 구현)")
     public String delete() {
-        Member member = rq.getMember();
-        RsData rs = memberService.delete(member);
-        return "redirect:/logout";
+        RsData rs = memberService.delete(rq.getMember());
+        return rq.redirectWithMsg("logout", rs.getMsg());
     }
 
 }

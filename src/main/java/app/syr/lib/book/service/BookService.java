@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,11 +21,7 @@ public class BookService {
     private final CategoryService categoryService;
 
     public Book findById(Long id) {
-        Optional<Book> book = bookRepository.findById(id);
-
-        if (book.isEmpty()) return null;
-
-        return book.get();
+        return bookRepository.findById(id).orElse(null);
     }
 
     public List<Book> findAll() {
@@ -34,15 +29,11 @@ public class BookService {
     }
 
     public Book findByTitleAndAuthor(String title, String author) {
-        Optional<Book> book = bookRepository.findByTitleAndAuthor(title, author);
-
-        if (book.isEmpty()) return null;
-
-        return book.get();
+        return bookRepository.findByTitleAndAuthor(title, author).orElse(null);
     }
 
-    public RsData<Book> create(String title, String author, String category) {
-        Category category1 = categoryService.findByName(category);
+    public RsData<Book> create(String title, String author, String categoryName) {
+        Category category = categoryService.findByName(categoryName);
 
         if (findByTitleAndAuthor(title, author) != null) {
             return RsData.of("F-1", "이미 존재하는 도서입니다.");
@@ -52,15 +43,15 @@ public class BookService {
                 .builder()
                 .title(title)
                 .author(author)
-                .category(category1)
+                .category(category)
                 .build();
 
         bookRepository.save(book);
         return RsData.of("S-1", "새로운 도서가 등록되었습니다.", book);
     }
 
-    public RsData<Book> modify(Book book, String title, String author, String category) {
-        Category category1 = categoryService.findByName(category);
+    public RsData<Book> modify(Book book, String title, String author, String categoryName) {
+        Category category = categoryService.findByName(categoryName);
 
         if (book.getTitle().equals(title) && book.getAuthor().equals(author)) {
             return RsData.of("F-1", "변경 사항이 없습니다.");
@@ -70,7 +61,7 @@ public class BookService {
                 .toBuilder()
                 .title(title)
                 .author(author)
-                .category(category1)
+                .category(category)
                 .build();
 
         bookRepository.save(book1);
@@ -85,20 +76,17 @@ public class BookService {
     }
 
     public void whenAfterLoan(Loan loan) {
-        Book book = loan.getBook();
-        Book book1 = book
-                .toBuilder()
-                .isOnLoan(true)
-                .build();
-        bookRepository.save(book1);
+        bookRepository.save(updateLoanStatus(loan.getBook(), true));
     }
 
     public void whenAfterReturn(Loan loan) {
-        Book book = loan.getBook();
-        Book book1 = book
+        bookRepository.save(updateLoanStatus(loan.getBook(), false));
+    }
+
+    private Book updateLoanStatus(Book book, boolean bool) {
+        return book
                 .toBuilder()
-                .isOnLoan(false)
+                .isOnLoan(bool)
                 .build();
-        bookRepository.save(book1);
     }
 }

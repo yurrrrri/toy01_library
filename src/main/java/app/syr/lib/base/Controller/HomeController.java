@@ -1,6 +1,5 @@
 package app.syr.lib.base.Controller;
 
-import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 @Tag(name = "메인", description = "메인, 로그아웃")
@@ -26,8 +23,7 @@ public class HomeController {
     @GetMapping("/")
     @Operation(summary = "메인")
     public String main(Model model) {
-        List<Book> books = bookService.findAll();
-        model.addAttribute("books", books);
+        model.addAttribute("books", bookService.findAll());
         return "main";
     }
 
@@ -35,10 +31,8 @@ public class HomeController {
     @GetMapping("/logout")
     @Operation(summary = "로그아웃")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
-
         new SecurityContextLogoutHandler()
                 .logout(request, response, SecurityContextHolder.getContext().getAuthentication());
-
         return "redirect:/member/login";
     }
 }

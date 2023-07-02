@@ -2,27 +2,20 @@ package app.syr.lib.book.controller;
 
 import app.syr.lib.base.rq.Rq;
 import app.syr.lib.base.rsData.RsData;
-import app.syr.lib.book.entity.Book;
 import app.syr.lib.book.service.BookService;
-import app.syr.lib.category.entity.Category;
 import app.syr.lib.category.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -37,8 +30,7 @@ public class BookController {
     @GetMapping("/list")
     @Operation(summary = "도서 목록")
     public String showList(Model model) {
-        List<Book> books = bookService.findAll();
-        model.addAttribute("books", books);
+        model.addAttribute("books", bookService.findAll());
         return "book/list";
     }
 
@@ -46,12 +38,12 @@ public class BookController {
     @GetMapping("/create")
     @Operation(summary = "도서 생성")
     public String create(Model model) {
-        List<Category> categories = categoryService.findAll();
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categoryService.findAll());
         return "/book/create";
     }
 
-    @Data
+    @Getter
+    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class BookForm {
@@ -73,20 +65,15 @@ public class BookController {
     @GetMapping("/modify/{id}")
     @Operation(summary = "도서 수정")
     public String modify(Model model, @PathVariable Long id) {
-        Book book = bookService.findById(id);
-        model.addAttribute(book);
-
-        List<Category> categories = categoryService.findAll();
-        model.addAttribute("categories", categories);
-
+        model.addAttribute(bookService.findById(id));
+        model.addAttribute("categories", categoryService.findAll());
         return "/book/modify";
     }
 
     @PostMapping("/modify/{id}")
     @Operation(summary = "도서 수정")
     public String modify(@Valid BookForm form, @PathVariable Long id) {
-        Book book = bookService.findById(id);
-        RsData rs = bookService.modify(book, form.getTitle(), form.getAuthor(), form.getCategory());
+        RsData rs = bookService.modify(bookService.findById(id), form.getTitle(), form.getAuthor(), form.getCategory());
 
         if (rs.isFail()) return rq.historyBack(rs.getMsg());
 
@@ -98,8 +85,7 @@ public class BookController {
     @GetMapping("/delete/{id}")
     @Operation(summary = "도서 삭제")
     public String delete(@PathVariable Long id) {
-        Book book = bookService.findById(id);
-        RsData rs = bookService.delete(book);
+        RsData rs = bookService.delete(bookService.findById(id));
         return rq.redirectWithMsg("/book/list", rs.getMsg());
     }
 

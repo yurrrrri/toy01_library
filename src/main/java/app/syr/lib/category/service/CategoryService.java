@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -16,19 +15,11 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     public Category findById(Long id) {
-        Optional<Category> category = categoryRepository.findById(id);
-
-        if (category.isEmpty()) return null;
-
-        return category.get();
+        return categoryRepository.findById(id).orElse(null);
     }
 
     public Category findByName(String name) {
-        Optional<Category> category = categoryRepository.findByName(name);
-
-        if (category.isEmpty()) return null;
-
-        return category.get();
+        return categoryRepository.findByName(name).orElse(null);
     }
 
     public List<Category> findAll() {
@@ -46,12 +37,12 @@ public class CategoryService {
     }
 
     public RsData<Category> modify(Category category, String name) {
-        Category category1 = category
+        Category modifyCategory = category
                 .toBuilder()
                 .name(name)
                 .build();
-        categoryRepository.save(category1);
-        return RsData.of("S-1", "카테고리 이름이 수정되었습니다.", category1);
+        categoryRepository.save(modifyCategory);
+        return RsData.of("S-1", "카테고리 이름이 수정되었습니다.", modifyCategory);
     }
 
     // hard-delete

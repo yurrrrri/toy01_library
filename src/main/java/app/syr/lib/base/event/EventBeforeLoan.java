@@ -2,15 +2,13 @@ package app.syr.lib.base.event;
 
 import app.syr.lib.Member.entity.Member;
 import lombok.Getter;
-import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class EventBeforeLoan extends ApplicationEvent {
+public class EventBeforeLoan {
 
     private final Member member;
 
-    public EventBeforeLoan(Object source, Member member) {
-        super(source);
+    public EventBeforeLoan(Member member) {
         this.member = member;
     }
 }

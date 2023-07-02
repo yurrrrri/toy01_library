@@ -1,6 +1,5 @@
 package app.syr.lib.base.Controller;
 
-import app.syr.lib.Loan.entity.Loan;
 import app.syr.lib.Loan.service.LoanService;
 import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.service.MemberService;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -32,16 +29,14 @@ public class AdmController {
     @GetMapping("/members")
     @Operation(summary = "전체 회원 목록")
     public String showMembers(Model model) {
-        List<Member> members = memberService.findAll();
-        model.addAttribute("members", members);
+        model.addAttribute("members", memberService.findAll());
         return "adm/members";
     }
 
     @GetMapping("/loans")
     @Operation(summary = "대출 현황")
     public String showLoans(Model model) {
-        List<Loan> loans = loanService.findAll();
-        model.addAttribute("loans", loans);
+        model.addAttribute("loans", loanService.findAll());
         return "adm/loans";
     }
 

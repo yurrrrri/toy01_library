@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -28,11 +27,7 @@ public class LoanService {
     private final Rq rq;
 
     public Loan findById(Long id) {
-        Optional<Loan> loan = loanRepository.findById(id);
-
-        if (loan.isEmpty()) return null;
-
-        return loan.get();
+        return loanRepository.findById(id).orElse(null);
     }
 
     public List<Loan> findByMemberAndDeleteDateIsNull(Member member) {
@@ -44,11 +39,13 @@ public class LoanService {
     }
 
     public RsData<Loan> borrow(Book book) {
-        publisher.publishEvent(new EventBeforeLoan(this, rq.getMember()));
+        publisher.publishEvent(new EventBeforeLoan(rq.getMember()));
 
-        if (rq.getMember().isCannotUse()) return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
+        if (rq.getMember().isCannotUse())
+            return RsData.of("F-1", "연체로 인해 대출할 수 없는 기간입니다.");
 
-        if (book.isOnLoan()) return RsData.of("F-2", "이미 대출 중인 도서입니다.");
+        if (book.isOnLoan())
+            return RsData.of("F-2", "이미 대출 중인 도서입니다.");
 
         Loan loan = Loan
                 .builder()
@@ -59,7 +56,7 @@ public class LoanService {
         String title = book.getTitle();
         loanRepository.save(loan);
 
-        publisher.publishEvent(new EventAfterLoan(this, loan));
+        publisher.publishEvent(new EventAfterLoan(loan));
         return RsData.of("S-1", "%s 도서가 대출되었습니다.".formatted(title), loan);
     }
 
@@ -67,12 +64,12 @@ public class LoanService {
         if (loan.isOverdue()) return RsData.of("F-2", "반납 기한이 지난 도서입니다.");
 
         LocalDateTime now = LocalDateTime.now();
-        Loan loan1 = loan
+        Loan extendLoan = loan
                 .toBuilder()
                 .deadline(now.plusDays(7))
                 .build();
-        loanRepository.save(loan1);
-        return RsData.of("S-1", "반납 기한이 연장되었습니다.", loan1);
+        loanRepository.save(extendLoan);
+        return RsData.of("S-1", "반납 기한이 연장되었습니다.", extendLoan);
     }
 
     // hard-delete
@@ -87,7 +84,7 @@ public class LoanService {
 
         String title = loan.getBook().getTitle();
 
-        publisher.publishEvent(new EventAfterReturn(this, loan));
+        publisher.publishEvent(new EventAfterReturn(loan));
 
         loanRepository.delete(loan);
         return RsData.of("S-1", "%s 도서가 반납되었습니다.".formatted(title));

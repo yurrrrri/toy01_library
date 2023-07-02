@@ -5,15 +5,15 @@ import app.syr.lib.Member.entity.Member;
 import app.syr.lib.Member.repository.MemberRepository;
 import app.syr.lib.base.rsData.RsData;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-@Slf4j
+import static app.syr.lib.Member.controller.MemberController.MemberCreateForm;
+import static app.syr.lib.Member.controller.MemberController.MemberModifyForm;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
@@ -22,40 +22,28 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public Member findById(Long id) {
-        Optional<Member> member = memberRepository.findById(id);
-
-        if (member.isEmpty()) return null;
-
-        return member.get();
+        return memberRepository.findById(id).orElse(null);
     }
 
     public Member findByUsername(String username) {
-        Optional<Member> member = memberRepository.findByUsername(username);
-
-        if (member.isEmpty()) return null;
-
-        return member.get();
+        return memberRepository.findByUsername(username).orElse(null);
     }
 
-    public Member findByIdAndDeleteDateIsNull(Long id) {
-        Optional<Member> member = memberRepository.findByIdAndDeleteDateIsNull(id);
-
-        if (member.isEmpty()) return null;
-
-        return member.get();
+    public List<Member> findAll() {
+        return memberRepository.findAll();
     }
 
-    public RsData<Member> create(String username, String password1, String password2, String email, String phoneNumber) {
-        RsData rs = canCreate(username, password1, password2);
+    public RsData<Member> create(MemberCreateForm form) {
+        RsData rs = canCreate(form.getUsername(), form.getPassword1(), form.getPassword2());
 
         if (rs.isFail()) return rs;
 
         Member member = Member
                 .builder()
-                .username(username)
-                .password(passwordEncoder.encode(password1))
-                .email(email)
-                .phoneNumber(phoneNumber)
+                .username(form.getUsername())
+                .password(passwordEncoder.encode(form.getPassword1()))
+                .email(form.getEmail())
+                .phoneNumber(form.getPhoneNumber())
                 .build();
 
         memberRepository.save(member);
@@ -74,16 +62,12 @@ public class MemberService {
         return RsData.of("S-1", "회원가입이 가능합니다.");
     }
 
-    public List<Member> findAll() {
-        return memberRepository.findAll();
-    }
-
-    public RsData<Member> modify(Member member, String password, String email, String phoneNumber) {
+    public RsData<Member> modify(Member member, MemberModifyForm form) {
         Member modifiedMember = member
                 .toBuilder()
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .phoneNumber(phoneNumber)
+                .password(passwordEncoder.encode(form.getPassword1()))
+                .email(form.getEmail())
+                .phoneNumber(form.getPhoneNumber())
                 .build();
 
         String username = modifiedMember.getUsername();
@@ -94,11 +78,11 @@ public class MemberService {
     // soft-delete
     public RsData delete(Member member) {
         String username = member.getUsername();
-        Member member1 = member
+        Member deletedMember = member
                 .toBuilder()
                 .deleteDate(LocalDateTime.now())
                 .build();
-        memberRepository.save(member1);
+        memberRepository.save(deletedMember);
         return RsData.of("S-1", "%s 회원의 탈퇴가 완료되었습니다.".formatted(username));
     }
 
@@ -111,19 +95,17 @@ public class MemberService {
 
     public void whenBeforeLoan(Member member) {
         LocalDateTime now = LocalDateTime.now();
-        if (member.getTimeout() == null) {
+        if (member.getTimeout() == null)
             member.setCannotUse(false);
-        } else {
-            if (now.isAfter(member.getTimeout())) {
-                member.setCannotUse(false);
-            }
+        else if (now.isAfter(member.getTimeout())) {
+            member.setCannotUse(false);
         }
     }
 
-    public void whenAfterReturn(Member member, boolean isOverdue) {
-        if(isOverdue) {
-            member.setTimeout();
-            member.setCannotUse(true);
+    public void whenAfterReturn(Loan loan) {
+        if (loan.isOverdue()) {
+            loan.getMember().setTimeout();
+            loan.getMember().setCannotUse(true);
         }
     }
 }
